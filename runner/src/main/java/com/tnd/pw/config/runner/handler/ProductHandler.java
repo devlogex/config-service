@@ -12,6 +12,9 @@ import com.tnd.pw.config.common.requests.ConfigRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.product.exception.ProductNotFoundException;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
+import com.tnd.pw.config.user.exception.PermissionNotFoundException;
+import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
+import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +28,28 @@ public class ProductHandler implements BaseHandler {
     @Autowired
     private ProductServiceHandler productServiceHandler;
 
-    @HandlerService(path = "/config/product/add", protocol = "POST",
-            dataRequestType = "com.tnd.pw.config.common.requests.ConfigRequest")
-    public BaseResponse<CsProductRepresentation> addProduct(BaseRequest<ConfigRequest> request) throws DBServiceException, IOException, ProductNotFoundException {
+    @HandlerService(path = "/config/product/add", protocol = "POST")
+    public BaseResponse<CsProductRepresentation> addProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException {
         LOGGER.info("[ProductHandler] addProduct() - request: {}", GsonUtils.convertToString(request));
-        CsProductRepresentation response = productServiceHandler.addProduct(request.getData());
+        CsProductRepresentation response = productServiceHandler.addProduct(request);
         LOGGER.info("[ProductHandler] addProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 
-    @HandlerService(path = "/config/product", protocol = "GET",
-            dataRequestType = "com.tnd.pw.config.common.requests.ConfigRequest")
-    public BaseResponse<CsProductRepresentation> getProduct(BaseRequest<ConfigRequest> request) throws DBServiceException, IOException, ProductNotFoundException {
+    @HandlerService(path = "/config/product", protocol = "GET")
+    public BaseResponse<CsProductRepresentation> getProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException {
         LOGGER.info("[ProductHandler] getProduct() - request: {}", GsonUtils.convertToString(request));
-        CsProductRepresentation response = productServiceHandler.getProduct(request.getData());
+        CsProductRepresentation response = productServiceHandler.getProduct(request);
         LOGGER.info("[ProductHandler] getProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 
-    @HandlerService(path = "/config/product/remove", protocol = "POST",
-            dataRequestType = "com.tnd.pw.config.common.requests.ConfigRequest")
-    public BaseResponse<CsProductRepresentation> removeProduct(BaseRequest<ConfigRequest> request) throws DBServiceException, IOException, ProductNotFoundException {
+    @HandlerService(path = "/config/product/remove", protocol = "POST")
+    public BaseResponse<CsProductRepresentation> removeProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException {
         LOGGER.info("[ProductHandler] removeProduct() - request: {}", GsonUtils.convertToString(request));
-        CsProductRepresentation response = productServiceHandler.removeProduct(request.getData());
+        CsProductRepresentation response = productServiceHandler.removeProduct(request);
         LOGGER.info("[ProductHandler] removeProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
+
 }

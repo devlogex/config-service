@@ -1,6 +1,9 @@
 package com.tnd.pw.config.runner.service.impl;
 
 import com.tnd.dbservice.common.exception.DBServiceException;
+import com.tnd.pw.config.common.requests.AdminRequest;
+import com.tnd.pw.config.common.requests.AnonymousRequest;
+import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.packages.entity.PackageCodeEntity;
 import com.tnd.pw.config.packages.enums.PackageCodeState;
 import com.tnd.pw.config.packages.enums.PackageState;
@@ -22,8 +25,10 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     private PackageService packageService;
 
     @Override
-    public CsPackageRepresentation addPackage(ConfigRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public CsPackageRepresentation addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
         packageService.createPackage(PackageEntity.builder()
+                .name(request.getName())
+                .description(request.getDescription())
                 .maxProduct(request.getMaxProduct())
                 .maxMember(request.getMaxMember())
                 .price(request.getPrice())
@@ -37,7 +42,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation getPackage(ConfigRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public CsPackageRepresentation getPackage(AnonymousRequest request) throws IOException, DBServiceException, PackageNotFoundException {
         List<PackageEntity> entities = packageService.getPackage(
                 PackageEntity.builder()
                         .id(request.getId())
@@ -48,7 +53,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public PackageRepresentation updatePackage(ConfigRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public PackageRepresentation updatePackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         if(request.getState() != null) {
             packageEntity.setState(PackageState.valueOf(request.getState()).ordinal());
@@ -58,7 +63,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation registerPackage(ConfigRequest request) throws DBServiceException, IOException, PackageNotFoundException {
+    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         PackageCodeEntity packageCode = packageService.createPackageCode(
                 PackageCodeEntity.builder()

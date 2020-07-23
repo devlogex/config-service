@@ -1,5 +1,6 @@
 package com.tnd.pw.config.product.service.impl;
 
+import com.tnd.common.api.common.Utils.GenUID;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.product.dao.ProductDao;
 import com.tnd.pw.config.product.entity.ProductEntity;
@@ -16,7 +17,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductEntity create(ProductEntity entity) throws IOException, DBServiceException {
-        entity.setId(System.currentTimeMillis());
+        entity.setId(GenUID.genProductID());
         entity.setCreatedAt(System.currentTimeMillis());
         productDao.create(entity);
         return entity;

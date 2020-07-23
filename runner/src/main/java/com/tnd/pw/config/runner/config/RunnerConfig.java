@@ -1,5 +1,6 @@
 package com.tnd.pw.config.runner.config;
 
+import com.tnd.common.cache.redis.CacheHelper;
 import com.tnd.pw.config.dbservice.DBServiceApiClient;
 import com.tnd.pw.config.dbservice.DataHelper;
 import com.tnd.pw.config.packages.dao.PackageCodeDao;
@@ -14,13 +15,24 @@ import com.tnd.pw.config.product.service.ProductService;
 import com.tnd.pw.config.product.service.impl.ProductServiceImpl;
 import com.tnd.pw.config.runner.handler.PackageHandler;
 import com.tnd.pw.config.runner.handler.ProductHandler;
+import com.tnd.pw.config.runner.handler.UserHandler;
 import com.tnd.pw.config.runner.handler.WorkspaceHandler;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
+import com.tnd.pw.config.runner.service.UserServiceHandler;
 import com.tnd.pw.config.runner.service.WorkspaceServiceHandler;
 import com.tnd.pw.config.runner.service.impl.PackageServiceHandlerImpl;
 import com.tnd.pw.config.runner.service.impl.ProductServiceHandlerImpl;
+import com.tnd.pw.config.runner.service.impl.UserServiceHandlerImpl;
 import com.tnd.pw.config.runner.service.impl.WorkspaceServiceHandlerImpl;
+import com.tnd.pw.config.user.dao.PermissionDao;
+import com.tnd.pw.config.user.dao.UserConfigDao;
+import com.tnd.pw.config.user.dao.UserProfileDao;
+import com.tnd.pw.config.user.dao.impl.PermissionDaoImpl;
+import com.tnd.pw.config.user.dao.impl.UserConfigDaoImpl;
+import com.tnd.pw.config.user.dao.impl.UserProfileDaoImpl;
+import com.tnd.pw.config.user.service.UserService;
+import com.tnd.pw.config.user.service.impl.UserServiceImpl;
 import com.tnd.pw.config.workspace.config.dao.WorkspaceConfigDao;
 import com.tnd.pw.config.workspace.config.dao.impl.WorkspaceConfigDaoImpl;
 import com.tnd.pw.config.workspace.config.service.WorkspaceConfigService;
@@ -39,6 +51,10 @@ import org.springframework.context.annotation.PropertySource;
 public class RunnerConfig {
     @Value("${db.url}")
     private String db_url;
+    @Value("${redis.url}")
+    private String redis_url;
+    @Value("${redis.password}")
+    private String redis_password;
 
     @Bean
     public DBServiceApiClient dbServiceApiClient() {
@@ -48,6 +64,31 @@ public class RunnerConfig {
     @Bean
     public DataHelper dataHelper(DBServiceApiClient dbServiceApiClient) {
         return new DataHelper(db_url, dbServiceApiClient);
+    }
+
+    @Bean
+    public CacheHelper cacheHelper() {
+        return new CacheHelper(redis_url, redis_password);
+    }
+
+    @Bean
+    public UserProfileDao userProfileDao() {
+        return new UserProfileDaoImpl();
+    }
+
+    @Bean
+    public UserConfigDao userConfigDao() {
+        return new UserConfigDaoImpl();
+    }
+
+    @Bean
+    public PermissionDao permissionDao() {
+        return new PermissionDaoImpl();
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserServiceImpl();
     }
 
     @Bean
@@ -105,8 +146,6 @@ public class RunnerConfig {
         return new WorkspaceHandler();
     }
 
-    ////////////
-
     @Bean
     public ProductDao productDao(){
         return new ProductDaoImpl();
@@ -125,5 +164,15 @@ public class RunnerConfig {
     @Bean
     public ProductHandler productHandler() {
         return new ProductHandler();
+    }
+
+    @Bean
+    public UserServiceHandler userServiceHandler() {
+        return new UserServiceHandlerImpl();
+    }
+
+    @Bean
+    public UserHandler userHandler() {
+        return new UserHandler();
     }
 }

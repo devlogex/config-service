@@ -17,6 +17,8 @@ public class RepresentationBuilder {
     public static PackageRepresentation buildPackageRepresentation(PackageEntity packageEntity) {
         PackageRepresentation packageRepresentation = new PackageRepresentation();
         packageRepresentation.setId(packageEntity.getId().toString());
+        packageRepresentation.setName(packageEntity.getName());
+        packageRepresentation.setDescription(packageEntity.getDescription());
         packageRepresentation.setCreatedAt(packageEntity.getCreatedAt().toString());
         packageRepresentation.setCreatedBy(packageEntity.getCreatedBy().toString());
         packageRepresentation.setMaxMember(packageEntity.getMaxMember());

@@ -8,6 +8,11 @@ import java.util.List;
 
 public class GsonUtils {
     private static final Gson gson = new Gson();
+
+    public static Gson getGson() {
+        return gson;
+    }
+
     public static String convertToString(Object obj) {
         return gson.toJson(obj);
     }

@@ -14,6 +14,10 @@ public class PackageRepresentation implements Serializable {
 
     @SerializedName("id")
     private String id;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("description")
+    private String description;
     @SerializedName("max_product")
     private Integer maxProduct;
     @SerializedName("max_member")

@@ -16,6 +16,10 @@ public class PackageEntity implements Serializable {
 
     @SerializedName("id")
     private Long id;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("description")
+    private String description;
     @SerializedName("max_product")
     private Integer maxProduct;
     @SerializedName("max_member")

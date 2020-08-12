@@ -21,6 +21,8 @@ public class UserProfileEntity implements Serializable {
     private String password;
     @SerializedName("role")
     private String role;
+    @SerializedName("avatar")
+    private String avatar;
     @SerializedName("first_name")
     private String firstName;
     @SerializedName("last_name")

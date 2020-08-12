@@ -15,13 +15,14 @@ import com.tnd.pw.config.runner.handler.ProductHandler;
 import com.tnd.pw.config.runner.handler.UserHandler;
 import com.tnd.pw.config.runner.handler.WorkspaceHandler;
 import com.tnd.pw.config.user.entity.PermissionEntity;
+import jodd.util.ClassLoaderUtil;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ConfigRunner {
 
@@ -48,11 +49,13 @@ public class ConfigRunner {
         commonServer.startServer();
     }
 
-    private static void initPermission() throws FileNotFoundException {
+    private static void initPermission() throws IOException {
 
-        JsonElement json = JsonParser.parseReader(new FileReader(
-                (new ConfigRunner()).getClass().getClassLoader().getResource("permissions.json").getFile()
-        ));
+        InputStream in = ClassLoaderUtil.getResourceAsStream("permissions.json");
+        Stream<String> lines = new BufferedReader(new InputStreamReader(in)).lines();
+        StringBuilder builder = new StringBuilder();
+        lines.forEach(line-> builder.append(line));
+        String json = builder.toString();
         List<UserPermission> permissions = GsonUtils.getGson().fromJson(json,
                 new TypeToken<ArrayList<UserPermission>>() {}.getType());
         CacheHelper cache = SpringApplicationContext.getBean(CacheHelper.class);

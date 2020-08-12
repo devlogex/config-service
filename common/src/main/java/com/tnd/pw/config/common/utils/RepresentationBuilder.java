@@ -1,15 +1,18 @@
 package com.tnd.pw.config.common.utils;
 
+import com.tnd.common.api.common.base.authens.UserPermission;
 import com.tnd.pw.config.common.representations.*;
 import com.tnd.pw.config.packages.enums.PackageState;
 import com.tnd.pw.config.packages.entity.PackageEntity;
 import com.tnd.pw.config.product.entity.ProductEntity;
 import com.tnd.pw.config.product.enums.ProductType;
+import com.tnd.pw.config.user.entity.UserProfileEntity;
 import com.tnd.pw.config.workspace.config.entity.WorkspaceConfigEntity;
 import com.tnd.pw.config.workspace.entity.WorkspaceEntity;
 import com.tnd.pw.config.workspace.enums.WorkspaceState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RepresentationBuilder {
@@ -89,6 +92,9 @@ public class RepresentationBuilder {
     }
 
     public static CsProductRepresentation buildListProductRep(List<ProductEntity> productEntities) {
+        if(productEntities.size() == 1) {
+            return new CsProductRepresentation(new Node<>(buildProductRepresentation(productEntities.get(0))));
+        }
         Node<ProductRepresentation> root = new Node<>(null);
         for(ProductEntity productEntity: productEntities) {
             if(productEntity.getParent() == null) {
@@ -115,5 +121,66 @@ public class RepresentationBuilder {
         for(Node<ProductRepresentation> child: root.getChildren()) {
             insertNode(child, node);
         }
+    }
+
+    public static UserRepresentation buildUserRepresentation(UserProfileEntity userProfile, String token) {
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setToken(token);
+        userRepresentation.setId(userProfile.getId());
+        userRepresentation.setEmail(userProfile.getEmail());
+        userRepresentation.setAvatar(userProfile.getAvatar());
+        userRepresentation.setFirstName(userProfile.getFirstName());
+        userRepresentation.setLastName(userProfile.getLastName());
+        userRepresentation.setCompanyName(userProfile.getCompanyName());
+        userRepresentation.setDomain(userProfile.getDomain());
+        userRepresentation.setRole(userProfile.getRole());
+        return userRepresentation;
+    }
+
+    public static UserRepresentation buildUserRepresentation(UserProfileEntity userProfile, String token, HashMap<Long, String> productPermissions) {
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setToken(token);
+        userRepresentation.setId(userProfile.getId());
+        userRepresentation.setEmail(userProfile.getEmail());
+        userRepresentation.setAvatar(userProfile.getAvatar());
+        userRepresentation.setFirstName(userProfile.getFirstName());
+        userRepresentation.setLastName(userProfile.getLastName());
+        userRepresentation.setCompanyName(userProfile.getCompanyName());
+        userRepresentation.setDomain(userProfile.getDomain());
+        userRepresentation.setRole(userProfile.getRole());
+        userRepresentation.setProductPermissions(productPermissions);
+        return userRepresentation;
+    }
+
+    public static CsProductRepresentation buildListProductRep(List<ProductEntity> productEntities, String token, HashMap<Long, String> productPermissions) {
+        if(productEntities.size() == 1) {
+            return new CsProductRepresentation(new Node<>(buildProductRepresentation(productEntities.get(0))), token, productPermissions);
+        }
+        Node<ProductRepresentation> root = new Node<>(null);
+        for(ProductEntity productEntity: productEntities) {
+            if(productEntity.getParent() == null) {
+                root.addChild(buildProductRepresentation(productEntity));
+            }
+            else {
+                Node<ProductRepresentation> node = new Node<>(buildProductRepresentation(productEntity));
+                for(Node<ProductRepresentation> child: root.getChildren()) {
+                    insertNode(child, node);
+                }
+            }
+        }
+        return new CsProductRepresentation(root, token, productPermissions);
+    }
+
+    public static UserRepresentation buildUserRepresentation(UserProfileEntity userProfile) {
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setId(userProfile.getId());
+        userRepresentation.setEmail(userProfile.getEmail());
+        userRepresentation.setAvatar(userProfile.getAvatar());
+        userRepresentation.setFirstName(userProfile.getFirstName());
+        userRepresentation.setLastName(userProfile.getLastName());
+        userRepresentation.setCompanyName(userProfile.getCompanyName());
+        userRepresentation.setDomain(userProfile.getDomain());
+        userRepresentation.setRole(userProfile.getRole());
+        return userRepresentation;
     }
 }

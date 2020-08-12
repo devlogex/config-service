@@ -1,5 +1,7 @@
 package com.tnd.pw.config.runner.config;
 
+import com.tnd.com.notification.NotificationService;
+import com.tnd.com.notification.email.EmailService;
 import com.tnd.common.cache.redis.CacheHelper;
 import com.tnd.pw.config.dbservice.DBServiceApiClient;
 import com.tnd.pw.config.dbservice.DataHelper;
@@ -55,6 +57,10 @@ public class RunnerConfig {
     private String redis_url;
     @Value("${redis.password}")
     private String redis_password;
+    @Value("${notification.sendAddress}")
+    private String sendAddress;
+    @Value("${notification.auth}")
+    private String auth;
 
     @Bean
     public DBServiceApiClient dbServiceApiClient() {
@@ -64,6 +70,11 @@ public class RunnerConfig {
     @Bean
     public DataHelper dataHelper(DBServiceApiClient dbServiceApiClient) {
         return new DataHelper(db_url, dbServiceApiClient);
+    }
+
+    @Bean
+    public NotificationService notificationService() {
+        return new EmailService(sendAddress, auth);
     }
 
     @Bean

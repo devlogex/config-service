@@ -11,6 +11,7 @@ import com.tnd.pw.config.common.representations.UserRepresentation;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
+import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.runner.service.UserServiceHandler;
 import com.tnd.pw.config.user.constants.AccountType;
 import com.tnd.pw.config.user.entity.PermissionEntity;
@@ -73,12 +74,13 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
                     new Payload(
                             userProfile.getId(),
                             userProfile.getDomain(),
+                            userProfile.getEmail(),
                             productPermissions,
                             userProfile.getRole(),
                             userConfigEntity.getWorkspaceId(),
                             workspacePermission
                     ));
-            return new UserRepresentation(token);
+            return RepresentationBuilder.buildUserRepresentation(userProfile, token, productMapping);
         } catch (UserConfigNotFoundException e) {
             throw new LoginException(String.format("User id %d did not have permission on workspace %d", userProfile.getId(), request.getWorkspaceId()));
         }
@@ -96,12 +98,13 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
                     new Payload(
                             userProfile.getId(),
                             userProfile.getDomain(),
+                            userProfile.getEmail(),
                             null,
                             userProfile.getRole(),
                             null,
                             null
                     ));
-            return new UserRepresentation(token);
+            return RepresentationBuilder.buildUserRepresentation(userProfile, token);
         } catch (UserProfileNotFoundException e) {
             throw new LoginException("Email not found !");
         }
@@ -115,6 +118,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
                         .lastName(request.getLastName())
                         .email(request.getEmail())
                         .role(AccountType.USER)
+                        .avatar(request.getAvatar())
                         .companyName(request.getCompanyName())
                         .domain(request.getDomain())
                         .password(request.getPassword())
@@ -124,11 +128,19 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
                 new Payload(
                         userProfile.getId(),
                         userProfile.getDomain(),
+                        userProfile.getEmail(),
                         null,
                         userProfile.getRole(),
                         null,
                         null
                 ));
-        return new UserRepresentation(token);
+        return RepresentationBuilder.buildUserRepresentation(userProfile, token);
+    }
+
+    @Override
+    public UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+        Long userId = request.getPayload().getUserId();
+        UserProfileEntity userProfile = userService.getUserProfile(UserProfileEntity.builder().id(userId).build()).get(0);
+        return RepresentationBuilder.buildUserRepresentation(userProfile);
     }
 }

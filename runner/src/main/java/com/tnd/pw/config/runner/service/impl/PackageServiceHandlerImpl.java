@@ -1,5 +1,6 @@
 package com.tnd.pw.config.runner.service.impl;
 
+import com.tnd.com.notification.NotificationService;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
@@ -17,12 +18,15 @@ import com.tnd.pw.config.packages.service.PackageService;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 
 public class PackageServiceHandlerImpl implements PackageServiceHandler {
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public CsPackageRepresentation addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
@@ -63,7 +67,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException {
+    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException, MessagingException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         PackageCodeEntity packageCode = packageService.createPackageCode(
                 PackageCodeEntity.builder()
@@ -72,6 +76,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
                         .expireTime(System.currentTimeMillis() + packageEntity.getPeriodValidity())
                         .build()
         );
+        notificationService.send(request.getPayload().getEmail(), "Package_Code", packageCode.getId().toString());
         return new CsPackageRepresentation(packageCode.getId().toString());
     }
 }

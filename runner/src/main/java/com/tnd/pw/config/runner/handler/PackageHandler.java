@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 
 @HandlerServiceClass
@@ -53,7 +54,7 @@ public class PackageHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/package/register", protocol = "POST")
-    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws IOException, DBServiceException, PackageNotFoundException, MessagingException {
         LOGGER.info("[PackageHandler] registerPackage() - request: {}", GsonUtils.convertToString(request));
         CsPackageRepresentation response = packageServiceHandler.registerPackage(request);
         LOGGER.info("[PackageHandler] registerPackage() - response: {}", GsonUtils.convertToString(response));

@@ -223,11 +223,17 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
-        List<UserConfigEntity> userConfigs = userService.getUserConfig(
-                UserConfigEntity.builder()
-                        .userId(request.getPayload().getUserId())
-                        .build());
+    public CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, IOException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
+        List<UserConfigEntity> userConfigs = null;
+        try {
+            userConfigs = userService.getUserConfig(
+                    UserConfigEntity.builder()
+                            .userId(request.getPayload().getUserId())
+                            .build());
+        } catch (UserConfigNotFoundException e) {
+            LOGGER.error("UserConfigNotFoundException with user_id: {}", request.getPayload().getUserId());
+            return new CsWorkspaceRepresentation(new ArrayList<>());
+        }
         List<WorkspaceRepresentation> list = new ArrayList<>();
         for(UserConfigEntity userConfigEntity: userConfigs) {
             WorkspaceEntity workspaceEntity = workspaceService.get(

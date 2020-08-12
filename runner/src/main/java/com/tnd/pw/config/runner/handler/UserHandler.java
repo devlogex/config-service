@@ -48,4 +48,12 @@ public class UserHandler implements BaseHandler {
         LOGGER.info("[UserHandler] registerUser() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
+
+    @HandlerService(path = "/config/user/current", protocol = "GET")
+    public BaseResponse<UserRepresentation> getCurrentUser(UserRequest request) throws IOException, DBServiceException, UserProfileNotFoundException {
+        LOGGER.info("[UserHandler] getCurrentUser() - request: {}", GsonUtils.convertToString(request));
+        UserRepresentation response = userServiceHandler.getCurrentUser(request);
+        LOGGER.info("[UserHandler] getCurrentUser() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
 }

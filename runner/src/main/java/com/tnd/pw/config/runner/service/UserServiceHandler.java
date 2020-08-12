@@ -17,4 +17,6 @@ public interface UserServiceHandler {
     UserRepresentation login(AnonymousRequest request) throws IOException, DBServiceException, LoginException;
 
     UserRepresentation createUser(AnonymousRequest request) throws IOException, DBServiceException;
+
+    UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
 }

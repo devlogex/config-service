@@ -15,6 +15,8 @@ public class AnonymousRequest extends BaseRequest {
     private String password;
     @SerializedName("name")
     private String name;
+    @SerializedName("avatar")
+    private String avatar;
     @SerializedName("first_name")
     private String firstName;
     @SerializedName("last_name")

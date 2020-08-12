@@ -16,11 +16,11 @@ public class UserProfileDaoImpl implements UserProfileDao {
     private DataHelper dataHelper;
 
     private static final String SQL_CREATE =
-            "INSERT INTO user_profile(id, email, password, role, first_name, last_name, " +
+            "INSERT INTO user_profile(id, email, password, role, avatar, first_name, last_name, " +
                     "company_name, domain, state, created_at, created_by) " +
-                    "values(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d)";
+                    "values(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d)";
     private static final String SQL_UPDATE =
-            "UPDATE user_profile SET password = '%s', role = '%s', first_name = '%s', " +
+            "UPDATE user_profile SET password = '%s', role = '%s', avatar = '%s', first_name = '%s', " +
                     "last_name = '%s', company_name = '%s', domain = '%s', state = %d, " +
                     "updated_at = %d, updated_by = %d WHERE id = %d";
     private static final String SQL_SELECT_BY_ID =
@@ -31,7 +31,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
     @Override
     public void create(UserProfileEntity entity) throws IOException, DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getEmail(), entity.getPassword(),
-                entity.getRole(), entity.getFirstName(), entity.getLastName(),entity.getCompanyName(),
+                entity.getRole(), entity.getAvatar(), entity.getFirstName(), entity.getLastName(),entity.getCompanyName(),
                 entity.getDomain(), entity.getState(), entity.getCreatedAt(), entity.getCreatedBy());
         dataHelper.executeSQL(query);
     }
@@ -54,7 +54,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
 
     @Override
     public void update(UserProfileEntity entity) throws IOException, DBServiceException {
-        String query = String.format(SQL_UPDATE, entity.getPassword(), entity.getRole(),
+        String query = String.format(SQL_UPDATE, entity.getPassword(), entity.getRole(), entity.getAvatar(),
                 entity.getFirstName(), entity.getLastName(), entity.getCompanyName(),
                 entity.getDomain(), entity.getState(), entity.getUpdatedAt(), entity.getUpdatedBy(),
                 entity.getId());

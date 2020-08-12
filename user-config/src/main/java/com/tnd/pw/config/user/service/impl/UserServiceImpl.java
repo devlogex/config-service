@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         entity.setState(UserState.ACTIVE.ordinal());
+        entity.setAvatar(entity.getAvatar() != null ? entity.getAvatar() : "");
         userProfileDao.create(entity);
         return entity;
     }

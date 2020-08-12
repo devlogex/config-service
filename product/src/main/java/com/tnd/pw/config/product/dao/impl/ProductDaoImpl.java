@@ -19,9 +19,9 @@ public class ProductDaoImpl implements ProductDao {
             "INSERT INTO product(id, name, type, parent, workspace_id, created_at, created_by) " +
                     "values(%d, '%s', %d, %d, %d, %d, %d)";
     private static final String SQL_SELECT_BY_ID =
-            "SELECT * FROM product WHERE id = %d";
+            "SELECT * FROM product WHERE id = %d ORDER BY created_at";
     private static final String SQL_SELECT_BY_WORKSPACE_ID =
-            "SELECT * FROM product WHERE workspace_id = %d";
+            "SELECT * FROM product WHERE workspace_id = %d ORDER BY created_at";
     private static final String SQL_DELETE =
             "DELETE FROM product WHERE id = %d";
 

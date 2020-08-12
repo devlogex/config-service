@@ -14,6 +14,7 @@ import com.tnd.pw.config.product.exception.ProductNotFoundException;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
 import com.tnd.pw.config.user.exception.PermissionNotFoundException;
 import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
+import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class ProductHandler implements BaseHandler {
     private ProductServiceHandler productServiceHandler;
 
     @HandlerService(path = "/config/product/add", protocol = "POST")
-    public BaseResponse<CsProductRepresentation> addProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException {
+    public BaseResponse<CsProductRepresentation> addProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
         LOGGER.info("[ProductHandler] addProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.addProduct(request);
         LOGGER.info("[ProductHandler] addProduct() - response: {}", GsonUtils.convertToString(response));

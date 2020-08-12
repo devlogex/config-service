@@ -9,11 +9,12 @@ import com.tnd.pw.config.common.requests.ConfigRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 
 public interface PackageServiceHandler {
     CsPackageRepresentation addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException;
     CsPackageRepresentation getPackage(AnonymousRequest request) throws IOException, DBServiceException, PackageNotFoundException;
     PackageRepresentation updatePackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException;
-    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException;
+    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException, MessagingException;
 }

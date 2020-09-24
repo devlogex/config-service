@@ -1,9 +1,9 @@
 package com.tnd.pw.config.runner.service;
 
 import com.tnd.dbservice.common.exception.DBServiceException;
+import com.tnd.pw.config.common.representations.CsUserRepresentation;
 import com.tnd.pw.config.common.representations.UserRepresentation;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
-import com.tnd.pw.config.common.requests.ConfigRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 
@@ -19,4 +19,8 @@ public interface UserServiceHandler {
     UserRepresentation createUser(AnonymousRequest request) throws IOException, DBServiceException;
 
     UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+
+    UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+
+    CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
 }

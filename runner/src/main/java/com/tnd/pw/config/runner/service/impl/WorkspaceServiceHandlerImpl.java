@@ -1,14 +1,14 @@
 package com.tnd.pw.config.runner.service.impl;
 
 
-import com.tnd.common.api.common.base.authens.UserPermission;
-import com.tnd.common.cache.redis.CacheHelper;
+import com.google.common.reflect.TypeToken;
+import com.tnd.common.api.common.Utils.GenUID;
 import com.tnd.dbservice.common.exception.DBServiceException;
-import com.tnd.pw.config.common.constants.CacheKeys;
 import com.tnd.pw.config.common.representations.CsWorkspaceRepresentation;
 import com.tnd.pw.config.common.representations.WorkspaceRepresentation;
-import com.tnd.pw.config.common.requests.ConfigRequest;
+import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
+import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.packages.entity.PackageCodeEntity;
@@ -28,7 +28,7 @@ import com.tnd.pw.config.runner.exception.PackageInactiveException;
 import com.tnd.pw.config.runner.service.WorkspaceServiceHandler;
 import com.tnd.pw.config.user.constants.AccountType;
 import com.tnd.pw.config.user.constants.UserPermissions;
-import com.tnd.pw.config.user.entity.PermissionEntity;
+import com.tnd.pw.config.user.constants.UserState;
 import com.tnd.pw.config.user.entity.UserConfigEntity;
 import com.tnd.pw.config.user.entity.UserProfileEntity;
 import com.tnd.pw.config.user.exception.PermissionNotFoundException;
@@ -111,7 +111,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation getWorkspace(ConfigRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
+    public CsWorkspaceRepresentation getWorkspace(AdminRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
         List<WorkspaceEntity> workspaceEntities = workspaceService.get(
                 WorkspaceEntity.builder()
                         .id(request.getId())
@@ -132,7 +132,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public WorkspaceRepresentation updateWorkspace(ConfigRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
+    public WorkspaceRepresentation updateWorkspace(WorkspaceRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
         WorkspaceEntity workspaceEntity = workspaceService.get(WorkspaceEntity.builder().id(request.getId()).build()).get(0);
         WorkspaceConfigEntity workspaceConfigEntity = workspaceConfigService.get(WorkspaceConfigEntity.builder().id(workspaceEntity.getConfigId()).build()).get(0);
         workspaceEntity.setState(WorkspaceState.valueOf(request.getState()).ordinal());
@@ -145,7 +145,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public WorkspaceRepresentation upgradeWorkspace(ConfigRequest request) throws DBServiceException, IOException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
+    public WorkspaceRepresentation upgradeWorkspace(WorkspaceRequest request) throws DBServiceException, IOException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         PackageCodeEntity packageCodeEntity = packageService.getPackageCode(PackageCodeEntity.builder().id(request.getCode()).build()).get(0);
         if(packageCodeEntity.getState() == PackageCodeState.INACTIVE.ordinal()) {
             throw new PackageCodeExpiredException();
@@ -180,31 +180,76 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation addUser(ConfigRequest request) throws DBServiceException, IOException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException {
+    public CsWorkspaceRepresentation addUser(WorkspaceRequest request) throws DBServiceException, IOException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException {
         Long workspaceId = request.getPayload().getWorkspaceId();
         HashMap<Long, String> productPermission = new HashMap<>();
         try {
+            checkInputData(request);
             UserProfileEntity userProfileEntity = userService.getUserProfile(
                     UserProfileEntity.builder()
                             .email(request.getEmail())
                             .build()
             ).get(0);
-
-            if(request.getPermission().values().contains(UserPermissions.OWNER)) {
-                List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(workspaceId).build());
-                for(ProductEntity productEntity: productEntities) {
-                    productPermission.put(productEntity.getId(), UserPermissions.OWNER);
-                }
-                userService.createUserConfig(
+            try {
+                UserConfigEntity userConfigEntity = userService.getUserConfig(
                         UserConfigEntity.builder()
                                 .userId(userProfileEntity.getId())
                                 .workspaceId(workspaceId)
-                                .workspacePermissions(UserPermissions.OWNER)
-                                .productPermissions(GsonUtils.convertToString(productPermission))
-                                .createdAt(request.getPayload().getUserId())
-                                .build());
-            } else {
-                initUserPermission(request, workspaceId, userProfileEntity, productPermission);
+                                .build()
+                ).get(0);
+                if(userConfigEntity.getState() == UserState.ACTIVE.ordinal()) {
+                    HashMap<Long, String> permissions = GsonUtils.getGson().fromJson(userConfigEntity.getProductPermissions(),
+                            new TypeToken<HashMap<Long, String>>() {
+                            }.getType());
+                    for (Long productId : request.getPermission().keySet()) {
+                        if (!permissions.containsKey(productId)) {
+                            permissions.put(productId, request.getPermission().get(productId));
+                        }
+                    }
+                    if (request.getPermission().containsValue(UserPermissions.OWNER)) {
+                        for (Long productId : permissions.keySet()) {
+                            permissions.replace(productId, UserPermissions.OWNER);
+                        }
+                        userConfigEntity.setWorkspacePermissions(UserPermissions.OWNER);
+                    }
+                    userConfigEntity.setProductPermissions(GsonUtils.convertToString(permissions));
+                } else {
+                    if(request.getPermission().values().contains(UserPermissions.OWNER)) {
+                        List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(workspaceId).build());
+                        for(ProductEntity productEntity: productEntities) {
+                            productPermission.put(productEntity.getId(), UserPermissions.OWNER);
+                        }
+                        userConfigEntity.setWorkspacePermissions(UserPermissions.OWNER);
+                    } else {
+                        for(Long productId: request.getPermission().keySet()) {
+                            if(request.getPermission().get(productId).equals(UserPermissions.OWNER)) {
+                                throw new InvalidDataException("Permission OWNER appear in list permissions , this have others permissions !");
+                            }
+                            productPermission.put(productId, request.getPermission().get(productId));
+                        }
+                        userConfigEntity.setWorkspacePermissions("");
+                    }
+                    userConfigEntity.setState(UserState.ACTIVE.ordinal());
+                    userConfigEntity.setProductPermissions(GsonUtils.convertToString(productPermission));
+                }
+                userService.updateUserConfig(userConfigEntity);
+            } catch (UserConfigNotFoundException e) {
+                if(request.getPermission().values().contains(UserPermissions.OWNER)) {
+                    List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(workspaceId).build());
+                    for(ProductEntity productEntity: productEntities) {
+                        productPermission.put(productEntity.getId(), UserPermissions.OWNER);
+                    }
+                    userService.createUserConfig(
+                            UserConfigEntity.builder()
+                                    .userId(userProfileEntity.getId())
+                                    .workspaceId(workspaceId)
+                                    .workspacePermissions(UserPermissions.OWNER)
+                                    .productPermissions(GsonUtils.convertToString(productPermission))
+                                    .createdAt(request.getPayload().getUserId())
+                                    .build());
+                } else {
+                    initUserPermission(request, workspaceId, userProfileEntity, productPermission);
+                }
             }
         } catch (UserProfileNotFoundException e) {
             UserProfileEntity userProfileEntity = userService.createUserProfile(
@@ -222,6 +267,14 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
         return null;
     }
 
+    private void checkInputData(WorkspaceRequest request) throws InvalidDataException {
+        for(Long productId: request.getPermission().keySet()) {
+            if(!GenUID.isProductId(productId)) {
+                throw new InvalidDataException(String.format("This id: %d is not product_id !", productId));
+            }
+        }
+    }
+
     @Override
     public CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, IOException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         List<UserConfigEntity> userConfigs = null;
@@ -229,6 +282,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             userConfigs = userService.getUserConfig(
                     UserConfigEntity.builder()
                             .userId(request.getPayload().getUserId())
+                            .state(UserState.ACTIVE.ordinal())
                             .build());
         } catch (UserConfigNotFoundException e) {
             LOGGER.error("UserConfigNotFoundException with user_id: {}", request.getPayload().getUserId());
@@ -252,7 +306,80 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
         return new CsWorkspaceRepresentation(list);
     }
 
-    private void initUserPermission(ConfigRequest request, Long workspaceId, UserProfileEntity userProfileEntity, HashMap<Long, String> productPermission) throws InvalidDataException, IOException, DBServiceException {
+    @Override
+    public CsWorkspaceRepresentation updateUser(WorkspaceRequest request) throws InvalidDataException, IOException, DBServiceException, UserConfigNotFoundException {
+        checkInputData(request);
+        UserConfigEntity userConfigEntity = userService.getUserConfig(
+                UserConfigEntity.builder()
+                        .userId(request.getUserId())
+                        .workspaceId(request.getPayload().getWorkspaceId())
+                        .state(UserState.ACTIVE.ordinal())
+                        .build()
+        ).get(0);
+        HashMap<Long, String> permissions = GsonUtils.getGson().fromJson(userConfigEntity.getProductPermissions(),
+                new TypeToken<HashMap<Long, String>>() {}.getType());
+        if(request.getIsDemote() != null) {
+            if(request.getPermission().containsValue(UserPermissions.OWNER)) {
+                throw new InvalidDataException("Data error ! Not OWNER when demoting !");
+            }
+            for(Long productId: permissions.keySet()) {
+                if(!request.getPermission().containsKey(productId)) {
+                    throw new InvalidDataException(String.format("Lack of data %s when demoting !", productId));
+                }
+                permissions.replace(productId, request.getPermission().get(productId));
+            }
+            userConfigEntity.setWorkspacePermissions("");
+        } else {
+            Long productId = (Long) request.getPermission().keySet().toArray()[0];
+            if(request.getPermission().containsValue(UserPermissions.OWNER)) {
+                if(permissions.containsValue(UserPermissions.OWNER)) {
+                    permissions.put(productId, request.getPermission().get(productId));
+                } else {
+                    for (Long key : permissions.keySet()) {
+                        permissions.replace(key, UserPermissions.OWNER);
+                    }
+                    userConfigEntity.setWorkspacePermissions(UserPermissions.OWNER);
+                }
+            } else {
+                if(permissions.containsValue(UserPermissions.OWNER)) {
+                    throw new InvalidDataException("User was Owner !");
+                }
+                permissions.put(productId, request.getPermission().get(productId));
+            }
+        }
+        userConfigEntity.setProductPermissions(GsonUtils.convertToString(permissions));
+        userService.updateUserConfig(userConfigEntity);
+        return null;
+    }
+
+    @Override
+    public CsWorkspaceRepresentation removeUser(WorkspaceRequest request) throws IOException, DBServiceException, UserConfigNotFoundException, InvalidDataException {
+        UserConfigEntity userConfigEntity = userService.getUserConfig(
+                UserConfigEntity.builder()
+                        .userId(request.getUserId())
+                        .workspaceId(request.getPayload().getWorkspaceId())
+                        .state(UserState.ACTIVE.ordinal())
+                        .build()
+        ).get(0);
+        if(request.getPermission() != null) {
+            checkInputData(request);
+            if(userConfigEntity.getWorkspacePermissions().equals(UserPermissions.OWNER)) {
+                throw new InvalidDataException("User was Owner ! Can't remove product of user !");
+            }
+            HashMap<Long, String> permissions = GsonUtils.getGson().fromJson(userConfigEntity.getProductPermissions(),
+                    new TypeToken<HashMap<Long, String>>() {}.getType());
+            for(Long productId: request.getPermission().keySet()) {
+                permissions.remove(productId);
+            }
+            userConfigEntity.setProductPermissions(GsonUtils.convertToString(permissions));
+        } else {
+            userConfigEntity.setState(UserState.INACTIVE.ordinal());
+        }
+        userService.updateUserConfig(userConfigEntity);
+        return null;
+    }
+
+    private void initUserPermission(WorkspaceRequest request, Long workspaceId, UserProfileEntity userProfileEntity, HashMap<Long, String> productPermission) throws InvalidDataException, IOException, DBServiceException {
         for(Long productId: request.getPermission().keySet()) {
             if(request.getPermission().get(productId).equals(UserPermissions.OWNER)) {
                 throw new InvalidDataException("Permission OWNER appear in list permissions , this have others permissions !");

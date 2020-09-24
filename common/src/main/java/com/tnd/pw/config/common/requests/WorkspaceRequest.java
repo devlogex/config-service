@@ -1,21 +1,19 @@
 package com.tnd.pw.config.common.requests;
 
 import com.google.gson.annotations.SerializedName;
-import com.tnd.common.api.common.base.BaseRequest;
-import com.tnd.common.api.common.base.authens.TokenRequest;
-import com.tnd.common.api.common.base.authens.UserTokenRequest;
+import com.tnd.common.api.common.base.authens.WorkspaceTokenRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashMap;
 
 @Getter
 @Setter
-public class ConfigRequest extends UserTokenRequest {
+public class WorkspaceRequest extends WorkspaceTokenRequest {
     private static final long serialVersionUID = 1L;
 
+    @SerializedName("id")
+    private Long id;
     @SerializedName("name")
     private String name;
     @SerializedName("state")
@@ -42,4 +40,8 @@ public class ConfigRequest extends UserTokenRequest {
     private String lastName;
     @SerializedName("permission")
     private HashMap<Long, String> permission;
+    @SerializedName("is_demote")
+    private String isDemote;
+    @SerializedName("user_id")
+    private Long userId;
 }

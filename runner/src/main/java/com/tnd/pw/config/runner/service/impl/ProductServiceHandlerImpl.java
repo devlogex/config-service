@@ -8,7 +8,7 @@ import com.tnd.common.cache.redis.CacheHelper;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.constants.CacheKeys;
 import com.tnd.pw.config.common.representations.CsProductRepresentation;
-import com.tnd.pw.config.common.requests.ConfigRequest;
+import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.product.entity.ProductEntity;
@@ -18,17 +18,13 @@ import com.tnd.pw.config.product.service.ProductService;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
 import com.tnd.pw.config.user.constants.UserPermissions;
 import com.tnd.pw.config.user.constants.UserState;
-import com.tnd.pw.config.user.constants.UserWPRoles;
-import com.tnd.pw.config.user.entity.PermissionEntity;
 import com.tnd.pw.config.user.entity.UserConfigEntity;
 import com.tnd.pw.config.user.entity.UserProfileEntity;
 import com.tnd.pw.config.user.exception.PermissionNotFoundException;
 import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
 import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 import com.tnd.pw.config.user.service.UserService;
-import com.tnd.pw.config.workspace.entity.WorkspaceEntity;
 import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
-import com.tnd.pw.config.workspace.service.WorkspaceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductServiceHandlerImpl implements ProductServiceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceHandlerImpl.class);
@@ -49,7 +46,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     private CacheHelper cacheHelper;
 
     @Override
-    public CsProductRepresentation addProduct(ConfigRequest request) throws IOException, DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
+    public CsProductRepresentation addProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
         Long userId = request.getPayload().getUserId();
         ProductEntity productEntity = productService.create(
                 ProductEntity.builder()
@@ -108,15 +105,26 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     }
 
     @Override
-    public CsProductRepresentation getProduct(ConfigRequest request) throws DBServiceException, IOException {
+    public CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException, IOException {
         List<ProductEntity> productEntities = null;
         try {
-            productEntities = productService.get(
-                    ProductEntity.builder()
-                            .id(request.getId())
-                            .workspaceId(request.getPayload().getWorkspaceId())
-                            .build()
-            );
+            if(request.getId() != null) {
+                productEntities = productService.get(
+                        ProductEntity.builder()
+                                .id(request.getId())
+                                .build()
+                );
+            } else {
+                productEntities = productService.get(
+                        ProductEntity.builder()
+                                .workspaceId(request.getPayload().getWorkspaceId())
+                                .build()
+                );
+            }
+            productEntities = productEntities.stream().filter(
+                    productEntity -> request.getPayload().getProductPermissions()
+                            .keySet().contains(productEntity.getId()))
+                    .collect(Collectors.toList());
             return RepresentationBuilder.buildListProductRep(productEntities);
         } catch (ProductNotFoundException e) {
             LOGGER.error("ProductNotFoundException with request: {}", request);
@@ -125,7 +133,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     }
 
     @Override
-    public CsProductRepresentation removeProduct(ConfigRequest request) throws IOException, DBServiceException, ProductNotFoundException {
+    public CsProductRepresentation removeProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException {
 //        ProductEntity productEntity = productService.get(ProductEntity.builder().id(request.getId()).build()).get(0);
 //        productService.remove(productEntity);
 //        List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(productEntity.getWorkspaceId()).build());
@@ -133,5 +141,27 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
         return null;
     }
 
+    @Override
+    public CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, IOException, UserProfileNotFoundException, ProductNotFoundException {
+        Long workspaceId = request.getPayload().getWorkspaceId();
+        HashMap<String, HashMap<String, String>> userPermissions = new HashMap<>();
+        List<UserConfigEntity> userConfigs = userService.getUserConfig(UserConfigEntity.builder().workspaceId(workspaceId).state(UserState.ACTIVE.ordinal()).build());
 
+        for (UserConfigEntity userConfig : userConfigs) {
+            UserProfileEntity userProfile = userService.getUserProfile(UserProfileEntity.builder().id(userConfig.getUserId()).build()).get(0);
+            String userRepresentation = GsonUtils.convertToString(RepresentationBuilder.buildUserRepresentation(userProfile));
+            userPermissions.put(userRepresentation, new HashMap<>());
+
+            HashMap<Long, String> productMapping = GsonUtils.getGson().fromJson(userConfig.getProductPermissions(),
+                    new TypeToken<HashMap<Long, String>>() {}.getType());
+            for(Long productId: productMapping.keySet()) {
+                ProductEntity productEntity = productService.get(ProductEntity.builder().id(productId).build()).get(0);
+                userPermissions.get(userRepresentation).put(
+                        GsonUtils.convertToString(RepresentationBuilder.buildProductRepresentation(productEntity)),
+                        productMapping.get(productId)
+                );
+            }
+        }
+        return new CsProductRepresentation(userPermissions);
+    }
 }

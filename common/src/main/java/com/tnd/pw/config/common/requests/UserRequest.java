@@ -15,4 +15,15 @@ public class UserRequest extends TokenRequest {
     private Long code;
     @SerializedName("id")
     private Long id;
+
+    @SerializedName("first_name")
+    private String firstName;
+    @SerializedName("last_name")
+    private String lastName;
+    @SerializedName("password")
+    private String password;
+    @SerializedName("avatar")
+    private String avatar;
+    @SerializedName("company_name")
+    private String companyName;
 }

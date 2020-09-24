@@ -5,6 +5,7 @@ import com.tnd.common.api.server.BaseHandler;
 import com.tnd.common.api.server.service.annotation.HandlerService;
 import com.tnd.common.api.server.service.annotation.HandlerServiceClass;
 import com.tnd.dbservice.common.exception.DBServiceException;
+import com.tnd.pw.config.common.representations.CsUserRepresentation;
 import com.tnd.pw.config.common.representations.UserRepresentation;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
@@ -54,6 +55,22 @@ public class UserHandler implements BaseHandler {
         LOGGER.info("[UserHandler] getCurrentUser() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.getCurrentUser(request);
         LOGGER.info("[UserHandler] getCurrentUser() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/user", protocol = "POST")
+    public BaseResponse<UserRepresentation> updateUserInfo(UserRequest request) throws IOException, DBServiceException, UserProfileNotFoundException {
+        LOGGER.info("[UserHandler] updateUserInfo() - request: {}", GsonUtils.convertToString(request));
+        UserRepresentation response = userServiceHandler.updateUserInfo(request);
+        LOGGER.info("[UserHandler] updateUserInfo() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/user/profile", protocol = "GET")
+    public BaseResponse<CsUserRepresentation> getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+        LOGGER.info("[UserHandler] getUserProfile() - request: {}", GsonUtils.convertToString(request));
+        CsUserRepresentation response = userServiceHandler.getUserProfile(request);
+        LOGGER.info("[UserHandler] getUserProfile() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 }

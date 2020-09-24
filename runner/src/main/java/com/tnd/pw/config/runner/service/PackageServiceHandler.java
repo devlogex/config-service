@@ -5,7 +5,6 @@ import com.tnd.pw.config.common.representations.CsPackageRepresentation;
 import com.tnd.pw.config.common.representations.PackageRepresentation;
 import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
-import com.tnd.pw.config.common.requests.ConfigRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 

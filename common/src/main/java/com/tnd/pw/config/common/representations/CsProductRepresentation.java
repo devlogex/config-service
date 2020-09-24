@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -22,8 +23,20 @@ public class CsProductRepresentation implements Serializable {
     private String token;
     @SerializedName("product_permissions")
     private HashMap<Long, String> productPermissions;
+    @SerializedName("user_permissions")
+    private HashMap<String, HashMap<String, String>> userPermissions;
 
     public CsProductRepresentation(Node<ProductRepresentation> productReps) {
         this.productReps = productReps;
+    }
+
+    public CsProductRepresentation(HashMap<String, HashMap<String, String>> userPermissions) {
+        this.userPermissions = userPermissions;
+    }
+
+    public CsProductRepresentation(Node<ProductRepresentation> productReps, String token, HashMap<Long, String> productPermissions) {
+        this.productReps = productReps;
+        this.token = token;
+        this.productPermissions = productPermissions;
     }
 }

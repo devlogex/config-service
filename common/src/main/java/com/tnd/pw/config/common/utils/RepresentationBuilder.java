@@ -92,10 +92,12 @@ public class RepresentationBuilder {
     }
 
     public static CsProductRepresentation buildListProductRep(List<ProductEntity> productEntities) {
-        if(productEntities.size() == 1) {
-            return new CsProductRepresentation(new Node<>(buildProductRepresentation(productEntities.get(0))));
-        }
         Node<ProductRepresentation> root = new Node<>(null);
+        if(productEntities.size() == 1) {
+            root.addChild(buildProductRepresentation(productEntities.get(0)));
+            return new CsProductRepresentation(root);
+        }
+
         for(ProductEntity productEntity: productEntities) {
             if(productEntity.getParent() == null) {
                 root.addChild(buildProductRepresentation(productEntity));
@@ -153,10 +155,12 @@ public class RepresentationBuilder {
     }
 
     public static CsProductRepresentation buildListProductRep(List<ProductEntity> productEntities, String token, HashMap<Long, String> productPermissions) {
-        if(productEntities.size() == 1) {
-            return new CsProductRepresentation(new Node<>(buildProductRepresentation(productEntities.get(0))), token, productPermissions);
-        }
         Node<ProductRepresentation> root = new Node<>(null);
+        if(productEntities.size() == 1) {
+            root.addChild(buildProductRepresentation(productEntities.get(0)));
+            return new CsProductRepresentation(root, token, productPermissions);
+        }
+
         for(ProductEntity productEntity: productEntities) {
             if(productEntity.getParent() == null) {
                 root.addChild(buildProductRepresentation(productEntity));
@@ -182,5 +186,24 @@ public class RepresentationBuilder {
         userRepresentation.setDomain(userProfile.getDomain());
         userRepresentation.setRole(userProfile.getRole());
         return userRepresentation;
+    }
+
+    public static CsUserRepresentation buildListUserProfile(List<UserProfileEntity> userProfiles) {
+        List<UserRepresentation> userReps = new ArrayList<>();
+        for(UserProfileEntity entity: userProfiles) {
+            userReps.add(buildUserProfile(entity));
+        }
+        return new CsUserRepresentation(userReps);
+    }
+
+    public static UserRepresentation buildUserProfile(UserProfileEntity entity) {
+        UserRepresentation representation = new UserRepresentation();
+        representation.setId(entity.getId());
+        representation.setRole(entity.getRole());
+        representation.setDomain(entity.getDomain());
+        representation.setEmail(entity.getEmail());
+        representation.setFirstName(entity.getFirstName());
+        representation.setLastName(entity.getLastName());
+        return representation;
     }
 }

@@ -1,14 +1,13 @@
 package com.tnd.pw.config.runner.handler;
 
 
-import com.tnd.common.api.common.base.BaseRequest;
 import com.tnd.common.api.common.base.BaseResponse;
 import com.tnd.common.api.server.BaseHandler;
 import com.tnd.common.api.server.service.annotation.HandlerService;
 import com.tnd.common.api.server.service.annotation.HandlerServiceClass;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.representations.CsProductRepresentation;
-import com.tnd.pw.config.common.requests.ConfigRequest;
+import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.product.exception.ProductNotFoundException;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
@@ -30,7 +29,7 @@ public class ProductHandler implements BaseHandler {
     private ProductServiceHandler productServiceHandler;
 
     @HandlerService(path = "/config/product/add", protocol = "POST")
-    public BaseResponse<CsProductRepresentation> addProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
+    public BaseResponse<CsProductRepresentation> addProduct(WorkspaceRequest request) throws DBServiceException, IOException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
         LOGGER.info("[ProductHandler] addProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.addProduct(request);
         LOGGER.info("[ProductHandler] addProduct() - response: {}", GsonUtils.convertToString(response));
@@ -38,7 +37,7 @@ public class ProductHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/product", protocol = "GET")
-    public BaseResponse<CsProductRepresentation> getProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException {
+    public BaseResponse<CsProductRepresentation> getProduct(WorkspaceRequest request) throws DBServiceException, IOException, ProductNotFoundException {
         LOGGER.info("[ProductHandler] getProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.getProduct(request);
         LOGGER.info("[ProductHandler] getProduct() - response: {}", GsonUtils.convertToString(response));
@@ -46,11 +45,18 @@ public class ProductHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/product/remove", protocol = "POST")
-    public BaseResponse<CsProductRepresentation> removeProduct(ConfigRequest request) throws DBServiceException, IOException, ProductNotFoundException {
+    public BaseResponse<CsProductRepresentation> removeProduct(WorkspaceRequest request) throws DBServiceException, IOException, ProductNotFoundException {
         LOGGER.info("[ProductHandler] removeProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.removeProduct(request);
         LOGGER.info("[ProductHandler] removeProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 
+    @HandlerService(path = "/config/product/user", protocol = "GET")
+    public BaseResponse<CsProductRepresentation> getUserInProduct(WorkspaceRequest request) throws DBServiceException, IOException, UserConfigNotFoundException, ProductNotFoundException, UserProfileNotFoundException {
+        LOGGER.info("[ProductHandler] getUserInProduct() - request: {}", GsonUtils.convertToString(request));
+        CsProductRepresentation response = productServiceHandler.getUserInProduct(request);
+        LOGGER.info("[ProductHandler] getUserInProduct() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
 }

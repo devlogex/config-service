@@ -10,7 +10,6 @@ import com.tnd.pw.config.packages.enums.PackageCodeState;
 import com.tnd.pw.config.packages.enums.PackageState;
 import com.tnd.pw.config.common.representations.CsPackageRepresentation;
 import com.tnd.pw.config.common.representations.PackageRepresentation;
-import com.tnd.pw.config.common.requests.ConfigRequest;
 import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.packages.entity.PackageEntity;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;

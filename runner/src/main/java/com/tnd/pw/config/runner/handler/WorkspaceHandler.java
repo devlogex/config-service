@@ -7,8 +7,9 @@ import com.tnd.common.api.server.service.annotation.HandlerServiceClass;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.representations.CsWorkspaceRepresentation;
 import com.tnd.pw.config.common.representations.WorkspaceRepresentation;
-import com.tnd.pw.config.common.requests.ConfigRequest;
+import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
+import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.packages.exception.InconsistentStateException;
 import com.tnd.pw.config.packages.exception.PackageCodeNotFoundException;
@@ -53,7 +54,7 @@ public class WorkspaceHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/workspace", protocol = "GET")
-    public BaseResponse<CsWorkspaceRepresentation> getWorkspace(ConfigRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, DBServiceException, IOException {
+    public BaseResponse<CsWorkspaceRepresentation> getWorkspace(AdminRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, DBServiceException, IOException {
         LOGGER.info("[WorkspaceHandler] getWorkspace() - request: {}", GsonUtils.convertToString(request));
         CsWorkspaceRepresentation response = workspaceServiceHandler.getWorkspace(request);
         LOGGER.info("[WorkspaceHandler] getWorkspace() - response: {}", GsonUtils.convertToString(response));
@@ -61,7 +62,7 @@ public class WorkspaceHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/workspace/update", protocol = "POST")
-    public BaseResponse<WorkspaceRepresentation> updateWorkspace(ConfigRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, DBServiceException, IOException {
+    public BaseResponse<WorkspaceRepresentation> updateWorkspace(WorkspaceRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, DBServiceException, IOException {
         LOGGER.info("[WorkspaceHandler] updateWorkspace() - request: {}", GsonUtils.convertToString(request));
         WorkspaceRepresentation response = workspaceServiceHandler.updateWorkspace(request);
         LOGGER.info("[WorkspaceHandler] updateWorkspace() - response: {}", GsonUtils.convertToString(response));
@@ -69,7 +70,7 @@ public class WorkspaceHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/workspace/upgrade", protocol = "POST")
-    public BaseResponse<WorkspaceRepresentation> upgradeWorkspace(ConfigRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, PackageCodeNotFoundException, IOException, DBServiceException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException {
+    public BaseResponse<WorkspaceRepresentation> upgradeWorkspace(WorkspaceRequest request) throws WorkspaceConfigNotFoundException, WorkspaceNotFoundException, PackageCodeNotFoundException, IOException, DBServiceException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException {
         LOGGER.info("[WorkspaceHandler] upgradeWorkspace() - request: {}", GsonUtils.convertToString(request));
         WorkspaceRepresentation response = workspaceServiceHandler.upgradeWorkspace(request);
         LOGGER.info("[WorkspaceHandler] upgradeWorkspace() - response: {}", GsonUtils.convertToString(response));
@@ -77,10 +78,26 @@ public class WorkspaceHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/workspace/add_user", protocol = "POST")
-    public BaseResponse<CsWorkspaceRepresentation> addUserToWorkspace(ConfigRequest request) throws UserProfileNotFoundException, ProductNotFoundException, IOException, DBServiceException, PermissionNotFoundException, InvalidDataException {
+    public BaseResponse<CsWorkspaceRepresentation> addUserToWorkspace(WorkspaceRequest request) throws UserProfileNotFoundException, ProductNotFoundException, IOException, DBServiceException, PermissionNotFoundException, InvalidDataException {
         LOGGER.info("[WorkspaceHandler] addUserToWorkspace() - request: {}", GsonUtils.convertToString(request));
         CsWorkspaceRepresentation response = workspaceServiceHandler.addUser(request);
         LOGGER.info("[WorkspaceHandler] addUserToWorkspace() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/workspace/update_user", protocol = "POST")
+    public BaseResponse<CsWorkspaceRepresentation> updateUserOfWorkspace(WorkspaceRequest request) throws UserProfileNotFoundException, ProductNotFoundException, IOException, DBServiceException, PermissionNotFoundException, InvalidDataException, UserConfigNotFoundException {
+        LOGGER.info("[WorkspaceHandler] updateUserOfWorkspace() - request: {}", GsonUtils.convertToString(request));
+        CsWorkspaceRepresentation response = workspaceServiceHandler.updateUser(request);
+        LOGGER.info("[WorkspaceHandler] updateUserOfWorkspace() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/workspace/delete_user", protocol = "POST")
+    public BaseResponse<CsWorkspaceRepresentation> RemoveUserOfWorkspace(WorkspaceRequest request) throws UserProfileNotFoundException, ProductNotFoundException, IOException, DBServiceException, PermissionNotFoundException, InvalidDataException, UserConfigNotFoundException {
+        LOGGER.info("[WorkspaceHandler] RemoveUserOfWorkspace() - request: {}", GsonUtils.convertToString(request));
+        CsWorkspaceRepresentation response = workspaceServiceHandler.removeUser(request);
+        LOGGER.info("[WorkspaceHandler] RemoveUserOfWorkspace() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 }

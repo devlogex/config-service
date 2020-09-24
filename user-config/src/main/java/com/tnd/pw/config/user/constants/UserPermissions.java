@@ -5,4 +5,5 @@ public interface UserPermissions {
     String CONTRIBUTE = "CONTRIBUTE";
     String REVIEWER = "REVIEWER";
     String VIEWER = "VIEWER";
+    String WORKSPACE_JOINED = "WORKSPACE_JOINED";
 }

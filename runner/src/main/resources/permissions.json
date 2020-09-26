@@ -4,14 +4,16 @@
     "permissions": [
       "/config/.*",
       "/strategy/.*",
-      "/action/.*"
+      "/action/.*",
+      "/development/.*"
     ]
   },
   {
     "name": "CONTRIBUTE",
     "permissions": [
       "/strategy/.*",
-      "/action/.*"
+      "/action/.*",
+      "/development/.*"
     ]
   },
   {
@@ -27,7 +29,8 @@
       "/strategy/position_component",
       "/strategy/vision",
       "/strategy/vision_component",
-      "/action/.*"
+      "/action/.*",
+      "/development/.*"
     ]
   },
   {
@@ -44,7 +47,12 @@
       "/strategy/vision",
       "/strategy/vision_component",
       "/action/todo",
-      "/action/comment.*"
+      "/action/comment.*",
+      "/development/release",
+      "/development/feature",
+      "/development/release/epic",
+      "/development/release/phase",
+      "/development/feature/requirement"
     ]
   },
   {

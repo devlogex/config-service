@@ -11,6 +11,7 @@ import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.runner.service.UserServiceHandler;
+import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
 import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,14 @@ public class UserHandler implements BaseHandler {
         LOGGER.info("[UserHandler] getUserProfile() - request: {}", GsonUtils.convertToString(request));
         CsUserRepresentation response = userServiceHandler.getUserProfile(request);
         LOGGER.info("[UserHandler] getUserProfile() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/user/product", protocol = "GET")
+    public BaseResponse<CsUserRepresentation> getUserOfProduct(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException, UserConfigNotFoundException {
+        LOGGER.info("[UserHandler] getUserOfProduct() - request: {}", GsonUtils.convertToString(request));
+        CsUserRepresentation response = userServiceHandler.getUserOfProduct(request);
+        LOGGER.info("[UserHandler] getUserOfProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 }

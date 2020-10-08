@@ -5,6 +5,7 @@ import com.tnd.pw.config.common.representations.CsUserRepresentation;
 import com.tnd.pw.config.common.representations.UserRepresentation;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
+import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
 import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 
 import javax.security.auth.login.LoginException;
@@ -23,4 +24,6 @@ public interface UserServiceHandler {
     UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
 
     CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+
+    CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException;
 }

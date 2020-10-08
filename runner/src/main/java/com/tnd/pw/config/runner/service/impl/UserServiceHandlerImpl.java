@@ -31,8 +31,7 @@ import org.springframework.util.StringUtils;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class UserServiceHandlerImpl implements UserServiceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceHandlerImpl.class);
@@ -181,5 +180,40 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
                         .build()
         );
         return RepresentationBuilder.buildListUserProfile(userProfiles);
+    }
+
+    @Override
+    public CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException {
+        Long productId = request.getId();
+        List<UserConfigEntity> userConfigs = userService.getUserConfig(
+                UserConfigEntity.builder()
+                        .workspaceId(request.getPayload().getWorkspaceId())
+                        .state(UserState.ACTIVE.ordinal())
+                        .build()
+        );
+        List<Long> userIds = getListUserId(userConfigs, productId);
+        List<UserProfileEntity> userProfiles = null;
+        try {
+            if(!CollectionUtils.isEmpty(userIds)) {
+                userProfiles = userService.getUserProfile(userIds);
+            }
+        } catch (UserProfileNotFoundException e) {
+        }
+        return RepresentationBuilder.buildListUserProfile(userProfiles);
+    }
+
+    private List<Long> getListUserId(List<UserConfigEntity> userConfigs, Long productId) {
+        List<Long> userIds = new ArrayList<>();
+        for(UserConfigEntity userConfig: userConfigs) {
+            String str = userConfig.getProductPermissions();
+            str = str.substring(2);
+            boolean isMatch = Arrays.stream(str.split("\\D+"))
+                    .mapToLong(s->Long.valueOf(s))
+                    .anyMatch(id->productId.compareTo(id)==0);
+            if(isMatch) {
+                userIds.add(userConfig.getUserId());
+            }
+        }
+        return userIds;
     }
 }

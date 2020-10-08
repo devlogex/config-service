@@ -58,12 +58,10 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
                         .build()
         );
 
-        UserConfigEntity userConfigEntity = userService.getUserConfig(
-                UserConfigEntity.builder()
-                        .userId(userId)
-                        .workspaceId(request.getPayload().getWorkspaceId())
-                        .build()
-        ).get(0);
+        List<UserConfigEntity> userConfigEntities = addPermissionOnProduct(productEntity);
+        UserConfigEntity userConfigEntity =  userConfigEntities.stream()
+                .filter(entity -> entity.getUserId().compareTo(userId) == 0)
+                .collect(Collectors.toList()).get(0);
         HashMap<Long, String> productMapping = GsonUtils.getGson().fromJson(userConfigEntity.getProductPermissions(),
                 new TypeToken<HashMap<Long, String>>() {}.getType());
         if(productMapping == null) {
@@ -102,6 +100,28 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
                 ));
 
         return RepresentationBuilder.buildListProductRep(productEntities, token, productMapping);
+    }
+
+    private List<UserConfigEntity> addPermissionOnProduct(ProductEntity productEntity) throws DBServiceException, UserConfigNotFoundException, IOException {
+        List<UserConfigEntity> userConfigs = userService.getUserConfig(
+                UserConfigEntity.builder()
+                        .workspaceId(productEntity.getWorkspaceId())
+                        .state(UserState.ACTIVE.ordinal())
+                        .workspacePermissions(UserPermissions.OWNER)
+                        .build()
+        );
+        for(UserConfigEntity userConfigEntity: userConfigs) {
+            HashMap<Long, String> productMapping = GsonUtils.getGson().fromJson(userConfigEntity.getProductPermissions(),
+                    new TypeToken<HashMap<Long, String>>() {
+                    }.getType());
+            if (productMapping == null) {
+                productMapping = new HashMap<>();
+            }
+            productMapping.put(productEntity.getId(), UserPermissions.OWNER);
+            userConfigEntity.setProductPermissions(GsonUtils.convertToString(productMapping));
+            userService.updateUserConfig(userConfigEntity);
+        }
+        return userConfigs;
     }
 
     @Override

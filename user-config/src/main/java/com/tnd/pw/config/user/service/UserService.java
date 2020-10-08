@@ -14,6 +14,7 @@ import java.util.List;
 public interface UserService {
     UserProfileEntity createUserProfile(UserProfileEntity entity) throws IOException, DBServiceException;
     List<UserProfileEntity> getUserProfile(UserProfileEntity entity) throws IOException, DBServiceException, UserProfileNotFoundException;
+    List<UserProfileEntity> getUserProfile(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException;
     void updateUserProfile(UserProfileEntity entity) throws IOException, DBServiceException;
 
     UserConfigEntity createUserConfig(UserConfigEntity entity) throws IOException, DBServiceException;

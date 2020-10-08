@@ -27,6 +27,8 @@ public class UserProfileDaoImpl implements UserProfileDao {
             "SELECT * FROM user_profile WHERE id = %d";
     private static final String SQL_SELECT_BY_EMAIL =
             "SELECT * FROM user_profile WHERE email = '%s'";
+    private static final String SQL_SELECT_BY_LIST_ID =
+            "SELECT * FROM user_profile WHERE id IN (%s)";
 
     @Override
     public void create(UserProfileEntity entity) throws IOException, DBServiceException {
@@ -45,6 +47,21 @@ public class UserProfileDaoImpl implements UserProfileDao {
         else {
             query = String.format(SQL_SELECT_BY_EMAIL, entity.getEmail());
         }
+        List<UserProfileEntity> entities = dataHelper.querySQL(query, UserProfileEntity.class);
+        if(CollectionUtils.isEmpty(entities)) {
+            throw new UserProfileNotFoundException();
+        }
+        return entities;
+    }
+
+    @Override
+    public List<UserProfileEntity> get(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException {
+        String listId = "";
+        for(Long id: ids) {
+            listId += String.valueOf(id) + ",";
+        }
+        listId = listId.substring(0,listId.length()-1);
+        String query = String.format(SQL_SELECT_BY_LIST_ID, listId);
         List<UserProfileEntity> entities = dataHelper.querySQL(query, UserProfileEntity.class);
         if(CollectionUtils.isEmpty(entities)) {
             throw new UserProfileNotFoundException();

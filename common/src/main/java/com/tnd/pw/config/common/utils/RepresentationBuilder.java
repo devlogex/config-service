@@ -190,8 +190,10 @@ public class RepresentationBuilder {
 
     public static CsUserRepresentation buildListUserProfile(List<UserProfileEntity> userProfiles) {
         List<UserRepresentation> userReps = new ArrayList<>();
-        for(UserProfileEntity entity: userProfiles) {
-            userReps.add(buildUserProfile(entity));
+        if(userProfiles != null) {
+            for (UserProfileEntity entity : userProfiles) {
+                userReps.add(buildUserProfile(entity));
+            }
         }
         return new CsUserRepresentation(userReps);
     }

@@ -41,6 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserProfileEntity> getUserProfile(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException {
+        return userProfileDao.get(ids);
+    }
+
+    @Override
     public void updateUserProfile(UserProfileEntity entity) throws IOException, DBServiceException {
         userProfileDao.update(entity);
     }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PackageDao {
-    void create(PackageEntity entity) throws IOException, DBServiceException;
-    List<PackageEntity> get(PackageEntity entity) throws IOException, DBServiceException, PackageNotFoundException;
-    void update(PackageEntity entity) throws IOException, DBServiceException;
+    void create(PackageEntity entity) throws DBServiceException;
+    List<PackageEntity> get(PackageEntity entity) throws DBServiceException, PackageNotFoundException;
+    void update(PackageEntity entity) throws DBServiceException;
 }

@@ -26,14 +26,14 @@ public class ProductDaoImpl implements ProductDao {
             "DELETE FROM product WHERE id = %d";
 
     @Override
-    public void create(ProductEntity entity) throws IOException, DBServiceException {
+    public void create(ProductEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getName(), entity.getType(),
                 entity.getParent(), entity.getWorkspaceId(), entity.getCreatedAt(),entity.getCreatedBy());
         dataHelper.executeSQL(query);
     }
 
     @Override
-    public List<ProductEntity> get(ProductEntity entity) throws IOException, DBServiceException, ProductNotFoundException {
+    public List<ProductEntity> get(ProductEntity entity) throws DBServiceException, ProductNotFoundException {
         String query;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -49,7 +49,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void remove(ProductEntity entity) throws IOException, DBServiceException {
+    public void remove(ProductEntity entity) throws DBServiceException {
         String query = String.format(SQL_DELETE, entity.getId());
         dataHelper.executeSQL(query);
     }

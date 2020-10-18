@@ -28,7 +28,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     private NotificationService notificationService;
 
     @Override
-    public CsPackageRepresentation addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public CsPackageRepresentation addPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
         packageService.createPackage(PackageEntity.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -45,7 +45,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation getPackage(AnonymousRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public CsPackageRepresentation getPackage(AnonymousRequest request) throws DBServiceException, PackageNotFoundException {
         List<PackageEntity> entities = packageService.getPackage(
                 PackageEntity.builder()
                         .id(request.getId())
@@ -56,7 +56,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public PackageRepresentation updatePackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public PackageRepresentation updatePackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         if(request.getState() != null) {
             packageEntity.setState(PackageState.valueOf(request.getState()).ordinal());
@@ -66,7 +66,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException, MessagingException {
+    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         PackageCodeEntity packageCode = packageService.createPackageCode(
                 PackageCodeEntity.builder()
@@ -75,7 +75,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
                         .expireTime(System.currentTimeMillis() + packageEntity.getPeriodValidity())
                         .build()
         );
-        notificationService.send(request.getPayload().getEmail(), "Package_Code", packageCode.getId().toString());
+//        notificationService.send(request.getPayload().getEmail(), "Package_Code", packageCode.getId().toString());
         return new CsPackageRepresentation(packageCode.getId().toString());
     }
 }

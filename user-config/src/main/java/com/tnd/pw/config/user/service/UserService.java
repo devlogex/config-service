@@ -12,16 +12,16 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
-    UserProfileEntity createUserProfile(UserProfileEntity entity) throws IOException, DBServiceException;
-    List<UserProfileEntity> getUserProfile(UserProfileEntity entity) throws IOException, DBServiceException, UserProfileNotFoundException;
-    List<UserProfileEntity> getUserProfile(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException;
-    void updateUserProfile(UserProfileEntity entity) throws IOException, DBServiceException;
+    UserProfileEntity createUserProfile(UserProfileEntity entity) throws DBServiceException;
+    List<UserProfileEntity> getUserProfile(UserProfileEntity entity) throws DBServiceException, UserProfileNotFoundException;
+    List<UserProfileEntity> getUserProfile(List<Long> ids) throws DBServiceException, UserProfileNotFoundException;
+    void updateUserProfile(UserProfileEntity entity) throws DBServiceException;
 
-    UserConfigEntity createUserConfig(UserConfigEntity entity) throws IOException, DBServiceException;
-    List<UserConfigEntity> getUserConfig(UserConfigEntity entity) throws IOException, DBServiceException, UserConfigNotFoundException;
-    void updateUserConfig(UserConfigEntity entity) throws IOException, DBServiceException;
+    UserConfigEntity createUserConfig(UserConfigEntity entity) throws DBServiceException;
+    List<UserConfigEntity> getUserConfig(UserConfigEntity entity) throws DBServiceException, UserConfigNotFoundException;
+    void updateUserConfig(UserConfigEntity entity) throws DBServiceException;
 
-    PermissionEntity createPermission(PermissionEntity entity) throws IOException, DBServiceException;
-    List<PermissionEntity> getPermission(PermissionEntity entity) throws IOException, DBServiceException, PermissionNotFoundException;
-    void updatePermission(PermissionEntity entity) throws IOException, DBServiceException;
+    PermissionEntity createPermission(PermissionEntity entity) throws DBServiceException;
+    List<PermissionEntity> getPermission(PermissionEntity entity) throws DBServiceException, PermissionNotFoundException;
+    void updatePermission(PermissionEntity entity) throws DBServiceException;
 }

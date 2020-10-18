@@ -12,9 +12,9 @@ import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
 import java.io.IOException;
 
 public interface ProductServiceHandler {
-    CsProductRepresentation addProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException;
-    CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException, IOException, ProductNotFoundException;
-    CsProductRepresentation removeProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException;
+    CsProductRepresentation addProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException;
+    CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException;
+    CsProductRepresentation removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException;
 
-    CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, IOException, UserProfileNotFoundException, ProductNotFoundException;
+    CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, UserProfileNotFoundException, ProductNotFoundException;
 }

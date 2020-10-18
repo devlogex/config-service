@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserConfigDao {
-    void create(UserConfigEntity entity) throws IOException, DBServiceException;
-    List<UserConfigEntity> get(UserConfigEntity entity) throws IOException, DBServiceException, UserConfigNotFoundException;
-    void update(UserConfigEntity entity) throws IOException, DBServiceException;
+    void create(UserConfigEntity entity) throws DBServiceException;
+    List<UserConfigEntity> get(UserConfigEntity entity) throws DBServiceException, UserConfigNotFoundException;
+    void update(UserConfigEntity entity) throws DBServiceException;
 }

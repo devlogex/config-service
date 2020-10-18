@@ -65,7 +65,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     private ProductService productService;
 
     @Override
-    public WorkspaceRepresentation addWorkspace(UserRequest request) throws IOException, DBServiceException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, InconsistentStateException {
+    public WorkspaceRepresentation addWorkspace(UserRequest request) throws DBServiceException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, InconsistentStateException {
         PackageCodeEntity packageCodeEntity = packageService.getPackageCode(PackageCodeEntity.builder().id(request.getCode()).build()).get(0);
         if(packageCodeEntity.getState() == PackageCodeState.INACTIVE.ordinal()) {
             throw new PackageCodeExpiredException();
@@ -111,7 +111,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation getWorkspace(AdminRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
+    public CsWorkspaceRepresentation getWorkspace(AdminRequest request) throws DBServiceException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         List<WorkspaceEntity> workspaceEntities = workspaceService.get(
                 WorkspaceEntity.builder()
                         .id(request.getId())
@@ -132,7 +132,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public WorkspaceRepresentation updateWorkspace(WorkspaceRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException {
+    public WorkspaceRepresentation updateWorkspace(WorkspaceRequest request) throws DBServiceException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         WorkspaceEntity workspaceEntity = workspaceService.get(WorkspaceEntity.builder().id(request.getId()).build()).get(0);
         WorkspaceConfigEntity workspaceConfigEntity = workspaceConfigService.get(WorkspaceConfigEntity.builder().id(workspaceEntity.getConfigId()).build()).get(0);
         workspaceEntity.setState(WorkspaceState.valueOf(request.getState()).ordinal());
@@ -145,7 +145,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public WorkspaceRepresentation upgradeWorkspace(WorkspaceRequest request) throws DBServiceException, IOException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
+    public WorkspaceRepresentation upgradeWorkspace(WorkspaceRequest request) throws DBServiceException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         PackageCodeEntity packageCodeEntity = packageService.getPackageCode(PackageCodeEntity.builder().id(request.getCode()).build()).get(0);
         if(packageCodeEntity.getState() == PackageCodeState.INACTIVE.ordinal()) {
             throw new PackageCodeExpiredException();
@@ -180,7 +180,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation addUser(WorkspaceRequest request) throws DBServiceException, IOException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException {
+    public CsWorkspaceRepresentation addUser(WorkspaceRequest request) throws DBServiceException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException {
         Long workspaceId = request.getPayload().getWorkspaceId();
         HashMap<Long, String> productPermission = new HashMap<>();
         try {
@@ -276,7 +276,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, IOException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
+    public CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException {
         List<UserConfigEntity> userConfigs = null;
         try {
             userConfigs = userService.getUserConfig(
@@ -307,7 +307,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation updateUser(WorkspaceRequest request) throws InvalidDataException, IOException, DBServiceException, UserConfigNotFoundException {
+    public CsWorkspaceRepresentation updateUser(WorkspaceRequest request) throws InvalidDataException, DBServiceException, UserConfigNotFoundException {
         checkInputData(request);
         UserConfigEntity userConfigEntity = userService.getUserConfig(
                 UserConfigEntity.builder()
@@ -353,7 +353,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     }
 
     @Override
-    public CsWorkspaceRepresentation removeUser(WorkspaceRequest request) throws IOException, DBServiceException, UserConfigNotFoundException, InvalidDataException {
+    public CsWorkspaceRepresentation removeUser(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, InvalidDataException {
         UserConfigEntity userConfigEntity = userService.getUserConfig(
                 UserConfigEntity.builder()
                         .userId(request.getUserId())
@@ -379,7 +379,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
         return null;
     }
 
-    private void initUserPermission(WorkspaceRequest request, Long workspaceId, UserProfileEntity userProfileEntity, HashMap<Long, String> productPermission) throws InvalidDataException, IOException, DBServiceException {
+    private void initUserPermission(WorkspaceRequest request, Long workspaceId, UserProfileEntity userProfileEntity, HashMap<Long, String> productPermission) throws InvalidDataException, DBServiceException {
         for(Long productId: request.getPermission().keySet()) {
             if(request.getPermission().get(productId).equals(UserPermissions.OWNER)) {
                 throw new InvalidDataException("Permission OWNER appear in list permissions , this have others permissions !");
@@ -396,7 +396,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
                         .build());
     }
 
-    private void updateOldConfig(Long configId) throws DBServiceException, WorkspaceConfigNotFoundException, IOException {
+    private void updateOldConfig(Long configId) throws DBServiceException, WorkspaceConfigNotFoundException {
         WorkspaceConfigEntity workspaceConfigEntity = workspaceConfigService.get(WorkspaceConfigEntity.builder().id(configId).build()).get(0);
         workspaceConfigEntity.setState(WorkspaceState.INACTIVE.ordinal());
         workspaceConfigService.update(workspaceConfigEntity);

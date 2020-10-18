@@ -31,7 +31,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
             "SELECT * FROM user_profile WHERE id IN (%s)";
 
     @Override
-    public void create(UserProfileEntity entity) throws IOException, DBServiceException {
+    public void create(UserProfileEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getEmail(), entity.getPassword(),
                 entity.getRole(), entity.getAvatar(), entity.getFirstName(), entity.getLastName(),entity.getCompanyName(),
                 entity.getDomain(), entity.getState(), entity.getCreatedAt(), entity.getCreatedBy());
@@ -39,7 +39,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
     }
 
     @Override
-    public List<UserProfileEntity> get(UserProfileEntity entity) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public List<UserProfileEntity> get(UserProfileEntity entity) throws DBServiceException, UserProfileNotFoundException {
         String query;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -55,7 +55,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
     }
 
     @Override
-    public List<UserProfileEntity> get(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public List<UserProfileEntity> get(List<Long> ids) throws DBServiceException, UserProfileNotFoundException {
         String listId = "";
         for(Long id: ids) {
             listId += String.valueOf(id) + ",";
@@ -70,7 +70,7 @@ public class UserProfileDaoImpl implements UserProfileDao {
     }
 
     @Override
-    public void update(UserProfileEntity entity) throws IOException, DBServiceException {
+    public void update(UserProfileEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getPassword(), entity.getRole(), entity.getAvatar(),
                 entity.getFirstName(), entity.getLastName(), entity.getCompanyName(),
                 entity.getDomain(), entity.getState(), entity.getUpdatedAt(), entity.getUpdatedBy(),

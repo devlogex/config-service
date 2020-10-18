@@ -22,16 +22,16 @@ import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
 import java.io.IOException;
 
 public interface WorkspaceServiceHandler {
-    WorkspaceRepresentation addWorkspace(UserRequest request) throws IOException, DBServiceException, PackageNotFoundException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageInactiveException, InconsistentStateException;
-    CsWorkspaceRepresentation getWorkspace(AdminRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException;
-    WorkspaceRepresentation updateWorkspace(WorkspaceRequest request) throws DBServiceException, WorkspaceNotFoundException, IOException, WorkspaceConfigNotFoundException;
-    WorkspaceRepresentation upgradeWorkspace(WorkspaceRequest request) throws DBServiceException, IOException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
+    WorkspaceRepresentation addWorkspace(UserRequest request) throws DBServiceException, PackageNotFoundException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageInactiveException, InconsistentStateException;
+    CsWorkspaceRepresentation getWorkspace(AdminRequest request) throws DBServiceException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
+    WorkspaceRepresentation updateWorkspace(WorkspaceRequest request) throws DBServiceException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
+    WorkspaceRepresentation upgradeWorkspace(WorkspaceRequest request) throws DBServiceException, PackageCodeNotFoundException, PackageCodeExpiredException, PackageNotFoundException, PackageInactiveException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
 
-    CsWorkspaceRepresentation addUser(WorkspaceRequest request) throws DBServiceException, UserProfileNotFoundException, IOException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException;
+    CsWorkspaceRepresentation addUser(WorkspaceRequest request) throws DBServiceException, UserProfileNotFoundException, PermissionNotFoundException, ProductNotFoundException, InvalidDataException;
 
-    CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
+    CsWorkspaceRepresentation getWorkspaceOfUser(UserRequest request) throws DBServiceException, UserConfigNotFoundException, WorkspaceNotFoundException, WorkspaceConfigNotFoundException;
 
-    CsWorkspaceRepresentation updateUser(WorkspaceRequest request) throws InvalidDataException, IOException, DBServiceException, UserConfigNotFoundException;
+    CsWorkspaceRepresentation updateUser(WorkspaceRequest request) throws InvalidDataException, DBServiceException, UserConfigNotFoundException;
 
-    CsWorkspaceRepresentation removeUser(WorkspaceRequest request) throws IOException, DBServiceException, UserConfigNotFoundException, InvalidDataException;
+    CsWorkspaceRepresentation removeUser(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, InvalidDataException;
 }

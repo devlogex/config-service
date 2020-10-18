@@ -15,7 +15,7 @@ public class WorkspaceConfigServiceImpl implements WorkspaceConfigService {
     private WorkspaceConfigDao workspaceConfigDao;
 
     @Override
-    public WorkspaceConfigEntity create(WorkspaceConfigEntity entity) throws IOException, DBServiceException {
+    public WorkspaceConfigEntity create(WorkspaceConfigEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         workspaceConfigDao.create(entity);
@@ -23,12 +23,12 @@ public class WorkspaceConfigServiceImpl implements WorkspaceConfigService {
     }
 
     @Override
-    public List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws IOException, DBServiceException, WorkspaceConfigNotFoundException {
+    public List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws DBServiceException, WorkspaceConfigNotFoundException {
         return workspaceConfigDao.get(entity);
     }
 
     @Override
-    public void update(WorkspaceConfigEntity entity) throws IOException, DBServiceException {
+    public void update(WorkspaceConfigEntity entity) throws DBServiceException {
         entity.setUpdatedAt(System.currentTimeMillis());
         workspaceConfigDao.update(entity);
     }

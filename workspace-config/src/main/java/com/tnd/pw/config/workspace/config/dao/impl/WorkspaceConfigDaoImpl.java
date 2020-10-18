@@ -28,7 +28,7 @@ public class WorkspaceConfigDaoImpl implements WorkspaceConfigDao {
             "SELECT * FROM workspace_config";
 
     @Override
-    public void create(WorkspaceConfigEntity entity) throws IOException, DBServiceException {
+    public void create(WorkspaceConfigEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getWorkspaceId(),
                 entity.getPackageId(), entity.getConfig(), entity.getState(),
                 entity.getCreatedAt(),entity.getCreatedBy());
@@ -36,7 +36,7 @@ public class WorkspaceConfigDaoImpl implements WorkspaceConfigDao {
     }
 
     @Override
-    public List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws IOException, DBServiceException, WorkspaceConfigNotFoundException {
+    public List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws DBServiceException, WorkspaceConfigNotFoundException {
         String query ;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -55,7 +55,7 @@ public class WorkspaceConfigDaoImpl implements WorkspaceConfigDao {
     }
 
     @Override
-    public void update(WorkspaceConfigEntity entity) throws IOException, DBServiceException {
+    public void update(WorkspaceConfigEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getState(),
                 entity.getUpdatedAt(), entity.getUpdatedBy(), entity.getId());
         dataHelper.executeSQL(query);

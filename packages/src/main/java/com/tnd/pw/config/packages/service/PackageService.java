@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PackageService {
-    PackageEntity createPackage(PackageEntity entity) throws IOException, DBServiceException;
-    List<PackageEntity> getPackage(PackageEntity entity) throws IOException, DBServiceException, PackageNotFoundException;
-    void updatePackage(PackageEntity entity) throws IOException, DBServiceException;
+    PackageEntity createPackage(PackageEntity entity) throws DBServiceException;
+    List<PackageEntity> getPackage(PackageEntity entity) throws DBServiceException, PackageNotFoundException;
+    void updatePackage(PackageEntity entity) throws DBServiceException;
 
-    PackageCodeEntity createPackageCode(PackageCodeEntity entity) throws IOException, DBServiceException;
-    List<PackageCodeEntity> getPackageCode(PackageCodeEntity entity) throws IOException, DBServiceException, PackageCodeNotFoundException;
-    void updatePackageCode(PackageCodeEntity entity) throws IOException, DBServiceException;
+    PackageCodeEntity createPackageCode(PackageCodeEntity entity) throws DBServiceException;
+    List<PackageCodeEntity> getPackageCode(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException;
+    void updatePackageCode(PackageCodeEntity entity) throws DBServiceException;
 }

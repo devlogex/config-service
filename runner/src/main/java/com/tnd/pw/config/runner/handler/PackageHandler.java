@@ -28,7 +28,7 @@ public class PackageHandler implements BaseHandler {
     private PackageServiceHandler packageServiceHandler;
 
     @HandlerService(path = "/config/package/add", protocol = "POST")
-    public BaseResponse<CsPackageRepresentation> addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public BaseResponse<CsPackageRepresentation> addPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
         LOGGER.info("[PackageHandler] addPackage() - request: {}", GsonUtils.convertToString(request));
         CsPackageRepresentation response = packageServiceHandler.addPackage(request);
         LOGGER.info("[PackageHandler] addPackage() - response: {}", GsonUtils.convertToString(response));
@@ -36,7 +36,7 @@ public class PackageHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/package/update", protocol = "POST")
-    public BaseResponse<PackageRepresentation> updatePackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public BaseResponse<PackageRepresentation> updatePackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
         LOGGER.info("[PackageHandler] updatePackage() - request: {}", GsonUtils.convertToString(request));
         PackageRepresentation response = packageServiceHandler.updatePackage(request);
         LOGGER.info("[PackageHandler] updatePackage() - response: {}", GsonUtils.convertToString(response));
@@ -44,7 +44,7 @@ public class PackageHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/package", protocol = "GET")
-    public BaseResponse<CsPackageRepresentation> getPackage(AnonymousRequest request) throws IOException, DBServiceException, PackageNotFoundException {
+    public BaseResponse<CsPackageRepresentation> getPackage(AnonymousRequest request) throws DBServiceException, PackageNotFoundException {
         LOGGER.info("[PackageHandler] getPackage() - request: {}", GsonUtils.convertToString(request));
         CsPackageRepresentation response = packageServiceHandler.getPackage(request);
         LOGGER.info("[PackageHandler] getPackage() - response: {}", GsonUtils.convertToString(response));
@@ -52,7 +52,7 @@ public class PackageHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/package/register", protocol = "POST")
-    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws IOException, DBServiceException, PackageNotFoundException, MessagingException {
+    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException {
         LOGGER.info("[PackageHandler] registerPackage() - request: {}", GsonUtils.convertToString(request));
         CsPackageRepresentation response = packageServiceHandler.registerPackage(request);
         LOGGER.info("[PackageHandler] registerPackage() - response: {}", GsonUtils.convertToString(response));

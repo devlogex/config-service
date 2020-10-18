@@ -15,7 +15,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     private WorkspaceDao workspaceDao;
 
     @Override
-    public WorkspaceEntity create(WorkspaceEntity entity) throws IOException, DBServiceException {
+    public WorkspaceEntity create(WorkspaceEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         workspaceDao.create(entity);
@@ -23,12 +23,12 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public List<WorkspaceEntity> get(WorkspaceEntity entity) throws IOException, DBServiceException, WorkspaceNotFoundException {
+    public List<WorkspaceEntity> get(WorkspaceEntity entity) throws DBServiceException, WorkspaceNotFoundException {
         return workspaceDao.get(entity);
     }
 
     @Override
-    public void update(WorkspaceEntity entity) throws IOException, DBServiceException {
+    public void update(WorkspaceEntity entity) throws DBServiceException {
         entity.setUpdatedAt(System.currentTimeMillis());
         workspaceDao.update(entity);
     }

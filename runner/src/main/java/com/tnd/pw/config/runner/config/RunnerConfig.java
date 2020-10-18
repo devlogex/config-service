@@ -3,6 +3,8 @@ package com.tnd.pw.config.runner.config;
 import com.tnd.com.notification.NotificationService;
 import com.tnd.com.notification.email.EmailService;
 import com.tnd.common.cache.redis.CacheHelper;
+import com.tnd.dbservice.sdk.api.DBServiceSdkClient;
+import com.tnd.dbservice.sdk.api.impl.DBServiceSdkClientImpl;
 import com.tnd.pw.config.dbservice.DBServiceApiClient;
 import com.tnd.pw.config.dbservice.DataHelper;
 import com.tnd.pw.config.packages.dao.PackageCodeDao;
@@ -15,10 +17,7 @@ import com.tnd.pw.config.product.dao.ProductDao;
 import com.tnd.pw.config.product.dao.impl.ProductDaoImpl;
 import com.tnd.pw.config.product.service.ProductService;
 import com.tnd.pw.config.product.service.impl.ProductServiceImpl;
-import com.tnd.pw.config.runner.handler.PackageHandler;
-import com.tnd.pw.config.runner.handler.ProductHandler;
-import com.tnd.pw.config.runner.handler.UserHandler;
-import com.tnd.pw.config.runner.handler.WorkspaceHandler;
+import com.tnd.pw.config.runner.handler.*;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
 import com.tnd.pw.config.runner.service.UserServiceHandler;
@@ -51,8 +50,10 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:application.properties")
 public class RunnerConfig {
-    @Value("${db.url}")
-    private String db_url;
+    @Value("${db.host}")
+    private String db_host;
+    @Value("${db.port}")
+    private String db_port;
     @Value("${redis.url}")
     private String redis_url;
     @Value("${redis.password}")
@@ -63,13 +64,13 @@ public class RunnerConfig {
     private String auth;
 
     @Bean
-    public DBServiceApiClient dbServiceApiClient() {
-        return new DBServiceApiClient();
+    public DBServiceSdkClient dbServiceSdkClient() {
+        return new DBServiceSdkClientImpl(db_host,Integer.parseInt(db_port), 1);
     }
 
     @Bean
-    public DataHelper dataHelper(DBServiceApiClient dbServiceApiClient) {
-        return new DataHelper(db_url, dbServiceApiClient);
+    public DataHelper dataHelper(DBServiceSdkClient dbServiceSdkClient) {
+        return new DataHelper(dbServiceSdkClient);
     }
 
     @Bean
@@ -185,5 +186,10 @@ public class RunnerConfig {
     @Bean
     public UserHandler userHandler() {
         return new UserHandler();
+    }
+
+    @Bean
+    public ConfigHandler configHandler() {
+        return new ConfigHandler();
     }
 }

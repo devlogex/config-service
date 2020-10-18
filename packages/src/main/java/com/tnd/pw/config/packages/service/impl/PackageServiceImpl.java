@@ -20,7 +20,7 @@ public class PackageServiceImpl implements PackageService {
     private PackageCodeDao packageCodeDao;
 
     @Override
-    public PackageEntity createPackage(PackageEntity entity) throws IOException, DBServiceException {
+    public PackageEntity createPackage(PackageEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         packageDao.create(entity);
@@ -28,18 +28,18 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public List<PackageEntity> getPackage(PackageEntity entity) throws IOException, DBServiceException, PackageNotFoundException {
+    public List<PackageEntity> getPackage(PackageEntity entity) throws DBServiceException, PackageNotFoundException {
         return packageDao.get(entity);
     }
 
     @Override
-    public void updatePackage(PackageEntity entity) throws IOException, DBServiceException {
+    public void updatePackage(PackageEntity entity) throws DBServiceException {
         entity.setUpdatedAt(System.currentTimeMillis());
         packageDao.update(entity);
     }
 
     @Override
-    public PackageCodeEntity createPackageCode(PackageCodeEntity entity) throws IOException, DBServiceException {
+    public PackageCodeEntity createPackageCode(PackageCodeEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         packageCodeDao.create(entity);
@@ -47,12 +47,12 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public List<PackageCodeEntity> getPackageCode(PackageCodeEntity entity) throws IOException, DBServiceException, PackageCodeNotFoundException {
+    public List<PackageCodeEntity> getPackageCode(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException {
         return packageCodeDao.get(entity);
     }
 
     @Override
-    public void updatePackageCode(PackageCodeEntity entity) throws IOException, DBServiceException {
+    public void updatePackageCode(PackageCodeEntity entity) throws DBServiceException {
         entity.setUpdatedAt(System.currentTimeMillis());
         packageCodeDao.update(entity);
     }

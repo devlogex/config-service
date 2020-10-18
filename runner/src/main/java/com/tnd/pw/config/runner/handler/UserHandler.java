@@ -5,6 +5,7 @@ import com.tnd.common.api.server.BaseHandler;
 import com.tnd.common.api.server.service.annotation.HandlerService;
 import com.tnd.common.api.server.service.annotation.HandlerServiceClass;
 import com.tnd.dbservice.common.exception.DBServiceException;
+import com.tnd.pw.config.common.constants.Methods;
 import com.tnd.pw.config.common.representations.CsUserRepresentation;
 import com.tnd.pw.config.common.representations.UserRepresentation;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
@@ -28,7 +29,7 @@ public class UserHandler implements BaseHandler {
     private UserServiceHandler userServiceHandler;
 
     @HandlerService(path = "/config/user/login/workspace", protocol = "POST")
-    public BaseResponse<UserRepresentation> loginWorkspace(UserRequest request) throws LoginException, UserProfileNotFoundException, DBServiceException, IOException {
+    public BaseResponse<UserRepresentation> loginWorkspace(UserRequest request) throws LoginException, UserProfileNotFoundException, DBServiceException {
         LOGGER.info("[UserHandler] loginWorkspace() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.loginWorkspace(request);
         LOGGER.info("[UserHandler] loginWorkspace() - response: {}", GsonUtils.convertToString(response));
@@ -36,7 +37,7 @@ public class UserHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/user/login", protocol = "POST")
-    public BaseResponse<UserRepresentation> login(AnonymousRequest request) throws DBServiceException, LoginException, IOException {
+    public BaseResponse<UserRepresentation> login(AnonymousRequest request) throws DBServiceException, LoginException {
         LOGGER.info("[UserHandler] login() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.login(request);
         LOGGER.info("[UserHandler] login() - response: {}", GsonUtils.convertToString(response));
@@ -44,7 +45,7 @@ public class UserHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/user/register", protocol = "POST")
-    public BaseResponse<UserRepresentation> registerUser(AnonymousRequest request) throws IOException, DBServiceException {
+    public BaseResponse<UserRepresentation> registerUser(AnonymousRequest request) throws DBServiceException {
         LOGGER.info("[UserHandler] registerUser() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.createUser(request);
         LOGGER.info("[UserHandler] registerUser() - response: {}", GsonUtils.convertToString(response));
@@ -52,7 +53,7 @@ public class UserHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/user/current", protocol = "GET")
-    public BaseResponse<UserRepresentation> getCurrentUser(UserRequest request) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public BaseResponse<UserRepresentation> getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         LOGGER.info("[UserHandler] getCurrentUser() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.getCurrentUser(request);
         LOGGER.info("[UserHandler] getCurrentUser() - response: {}", GsonUtils.convertToString(response));
@@ -60,15 +61,15 @@ public class UserHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/user", protocol = "POST")
-    public BaseResponse<UserRepresentation> updateUserInfo(UserRequest request) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public BaseResponse<UserRepresentation> updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         LOGGER.info("[UserHandler] updateUserInfo() - request: {}", GsonUtils.convertToString(request));
         UserRepresentation response = userServiceHandler.updateUserInfo(request);
         LOGGER.info("[UserHandler] updateUserInfo() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 
-    @HandlerService(path = "/config/user/profile", protocol = "GET")
-    public BaseResponse<CsUserRepresentation> getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+    @HandlerService(method = Methods.GET_USER_PROFILE, path = "/config/user/profile", protocol = "GET")
+    public BaseResponse<CsUserRepresentation> getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         LOGGER.info("[UserHandler] getUserProfile() - request: {}", GsonUtils.convertToString(request));
         CsUserRepresentation response = userServiceHandler.getUserProfile(request);
         LOGGER.info("[UserHandler] getUserProfile() - response: {}", GsonUtils.convertToString(response));
@@ -76,7 +77,7 @@ public class UserHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/user/product", protocol = "GET")
-    public BaseResponse<CsUserRepresentation> getUserOfProduct(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException, UserConfigNotFoundException {
+    public BaseResponse<CsUserRepresentation> getUserOfProduct(UserRequest request) throws DBServiceException, UserProfileNotFoundException, UserConfigNotFoundException {
         LOGGER.info("[UserHandler] getUserOfProduct() - request: {}", GsonUtils.convertToString(request));
         CsUserRepresentation response = userServiceHandler.getUserOfProduct(request);
         LOGGER.info("[UserHandler] getUserOfProduct() - response: {}", GsonUtils.convertToString(response));

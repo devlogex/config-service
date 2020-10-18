@@ -12,8 +12,8 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 
 public interface PackageServiceHandler {
-    CsPackageRepresentation addPackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException;
-    CsPackageRepresentation getPackage(AnonymousRequest request) throws IOException, DBServiceException, PackageNotFoundException;
-    PackageRepresentation updatePackage(AdminRequest request) throws IOException, DBServiceException, PackageNotFoundException;
-    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, IOException, PackageNotFoundException, MessagingException;
+    CsPackageRepresentation addPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException;
+    CsPackageRepresentation getPackage(AnonymousRequest request) throws DBServiceException, PackageNotFoundException;
+    PackageRepresentation updatePackage(AdminRequest request) throws DBServiceException, PackageNotFoundException;
+    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException;
 }

@@ -46,7 +46,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     private CacheHelper cacheHelper;
 
     @Override
-    public CsProductRepresentation addProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
+    public CsProductRepresentation addProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
         Long userId = request.getPayload().getUserId();
         ProductEntity productEntity = productService.create(
                 ProductEntity.builder()
@@ -102,7 +102,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
         return RepresentationBuilder.buildListProductRep(productEntities, token, productMapping);
     }
 
-    private List<UserConfigEntity> addPermissionOnProduct(ProductEntity productEntity) throws DBServiceException, UserConfigNotFoundException, IOException {
+    private List<UserConfigEntity> addPermissionOnProduct(ProductEntity productEntity) throws DBServiceException, UserConfigNotFoundException {
         List<UserConfigEntity> userConfigs = userService.getUserConfig(
                 UserConfigEntity.builder()
                         .workspaceId(productEntity.getWorkspaceId())
@@ -125,7 +125,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     }
 
     @Override
-    public CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException, IOException {
+    public CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException {
         List<ProductEntity> productEntities = null;
         try {
             if(request.getId() != null) {
@@ -153,7 +153,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     }
 
     @Override
-    public CsProductRepresentation removeProduct(WorkspaceRequest request) throws IOException, DBServiceException, ProductNotFoundException {
+    public CsProductRepresentation removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException {
 //        ProductEntity productEntity = productService.get(ProductEntity.builder().id(request.getId()).build()).get(0);
 //        productService.remove(productEntity);
 //        List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(productEntity.getWorkspaceId()).build());
@@ -162,7 +162,7 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     }
 
     @Override
-    public CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, IOException, UserProfileNotFoundException, ProductNotFoundException {
+    public CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, UserProfileNotFoundException, ProductNotFoundException {
         Long workspaceId = request.getPayload().getWorkspaceId();
         HashMap<String, HashMap<String, String>> userPermissions = new HashMap<>();
         List<UserConfigEntity> userConfigs = userService.getUserConfig(UserConfigEntity.builder().workspaceId(workspaceId).state(UserState.ACTIVE.ordinal()).build());

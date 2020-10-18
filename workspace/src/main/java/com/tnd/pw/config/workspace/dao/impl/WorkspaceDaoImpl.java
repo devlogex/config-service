@@ -26,14 +26,14 @@ public class WorkspaceDaoImpl implements WorkspaceDao {
             "SELECT * FROM workspace WHERE state = %d";
 
     @Override
-    public void create(WorkspaceEntity entity) throws IOException, DBServiceException {
+    public void create(WorkspaceEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getConfigId(), entity.getState(),
                 entity.getOwnerId(), entity.getDomain(), entity.getCreatedAt(),entity.getCreatedBy());
         dataHelper.executeSQL(query);
     }
 
     @Override
-    public List<WorkspaceEntity> get(WorkspaceEntity entity) throws IOException, DBServiceException, WorkspaceNotFoundException {
+    public List<WorkspaceEntity> get(WorkspaceEntity entity) throws DBServiceException, WorkspaceNotFoundException {
         String query;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -49,7 +49,7 @@ public class WorkspaceDaoImpl implements WorkspaceDao {
     }
 
     @Override
-    public void update(WorkspaceEntity entity) throws IOException, DBServiceException {
+    public void update(WorkspaceEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getState(), entity.getConfigId(),
                 entity.getUpdatedAt(), entity.getUpdatedBy(), entity.getId());
         dataHelper.executeSQL(query);

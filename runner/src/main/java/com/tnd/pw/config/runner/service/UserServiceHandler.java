@@ -13,17 +13,17 @@ import java.io.IOException;
 
 public interface UserServiceHandler {
 
-    UserRepresentation loginWorkspace(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException, LoginException;
+    UserRepresentation loginWorkspace(UserRequest request) throws DBServiceException, UserProfileNotFoundException, LoginException;
 
-    UserRepresentation login(AnonymousRequest request) throws IOException, DBServiceException, LoginException;
+    UserRepresentation login(AnonymousRequest request) throws DBServiceException, LoginException;
 
-    UserRepresentation createUser(AnonymousRequest request) throws IOException, DBServiceException;
+    UserRepresentation createUser(AnonymousRequest request) throws DBServiceException;
 
-    UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+    UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException;
 
-    UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+    UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException;
 
-    CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException;
+    CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException;
 
-    CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException;
+    CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException;
 }

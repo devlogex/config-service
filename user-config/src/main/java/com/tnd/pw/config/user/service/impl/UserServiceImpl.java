@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private PermissionDao permissionDao;
 
     @Override
-    public UserProfileEntity createUserProfile(UserProfileEntity entity) throws IOException, DBServiceException {
+    public UserProfileEntity createUserProfile(UserProfileEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         entity.setState(UserState.ACTIVE.ordinal());
@@ -36,22 +36,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserProfileEntity> getUserProfile(UserProfileEntity entity) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public List<UserProfileEntity> getUserProfile(UserProfileEntity entity) throws DBServiceException, UserProfileNotFoundException {
         return userProfileDao.get(entity);
     }
 
     @Override
-    public List<UserProfileEntity> getUserProfile(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException {
+    public List<UserProfileEntity> getUserProfile(List<Long> ids) throws DBServiceException, UserProfileNotFoundException {
         return userProfileDao.get(ids);
     }
 
     @Override
-    public void updateUserProfile(UserProfileEntity entity) throws IOException, DBServiceException {
+    public void updateUserProfile(UserProfileEntity entity) throws DBServiceException {
         userProfileDao.update(entity);
     }
 
     @Override
-    public UserConfigEntity createUserConfig(UserConfigEntity entity) throws IOException, DBServiceException {
+    public UserConfigEntity createUserConfig(UserConfigEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         entity.setCreatedAt(System.currentTimeMillis());
         entity.setState(UserState.ACTIVE.ordinal());
@@ -61,29 +61,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserConfigEntity> getUserConfig(UserConfigEntity entity) throws IOException, DBServiceException, UserConfigNotFoundException {
+    public List<UserConfigEntity> getUserConfig(UserConfigEntity entity) throws DBServiceException, UserConfigNotFoundException {
         return userConfigDao.get(entity);
     }
 
     @Override
-    public void updateUserConfig(UserConfigEntity entity) throws IOException, DBServiceException {
+    public void updateUserConfig(UserConfigEntity entity) throws DBServiceException {
         userConfigDao.update(entity);
     }
 
     @Override
-    public PermissionEntity createPermission(PermissionEntity entity) throws IOException, DBServiceException {
+    public PermissionEntity createPermission(PermissionEntity entity) throws DBServiceException {
         entity.setId(System.currentTimeMillis());
         permissionDao.create(entity);
         return entity;
     }
 
     @Override
-    public List<PermissionEntity> getPermission(PermissionEntity entity) throws IOException, DBServiceException, PermissionNotFoundException {
+    public List<PermissionEntity> getPermission(PermissionEntity entity) throws DBServiceException, PermissionNotFoundException {
         return permissionDao.get(entity);
     }
 
     @Override
-    public void updatePermission(PermissionEntity entity) throws IOException, DBServiceException {
+    public void updatePermission(PermissionEntity entity) throws DBServiceException {
         permissionDao.update(entity);
     }
 }

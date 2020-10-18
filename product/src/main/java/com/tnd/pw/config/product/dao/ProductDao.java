@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProductDao {
-    void create(ProductEntity entity) throws IOException, DBServiceException;
-    List<ProductEntity> get(ProductEntity entity) throws IOException, DBServiceException, ProductNotFoundException;
-    void remove(ProductEntity entity) throws IOException, DBServiceException;
+    void create(ProductEntity entity) throws DBServiceException;
+    List<ProductEntity> get(ProductEntity entity) throws DBServiceException, ProductNotFoundException;
+    void remove(ProductEntity entity) throws DBServiceException;
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface WorkspaceConfigService {
-    WorkspaceConfigEntity create(WorkspaceConfigEntity entity) throws IOException, DBServiceException;
-    List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws IOException, DBServiceException, WorkspaceConfigNotFoundException;
-    void update(WorkspaceConfigEntity entity) throws IOException, DBServiceException;
+    WorkspaceConfigEntity create(WorkspaceConfigEntity entity) throws DBServiceException;
+    List<WorkspaceConfigEntity> get(WorkspaceConfigEntity entity) throws DBServiceException, WorkspaceConfigNotFoundException;
+    void update(WorkspaceConfigEntity entity) throws DBServiceException;
 }

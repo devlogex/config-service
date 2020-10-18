@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PackageCodeDao {
-    void create(PackageCodeEntity entity) throws IOException, DBServiceException;
-    List<PackageCodeEntity> get(PackageCodeEntity entity) throws IOException, DBServiceException, PackageCodeNotFoundException;
-    void update(PackageCodeEntity entity) throws IOException, DBServiceException;
+    void create(PackageCodeEntity entity) throws DBServiceException;
+    List<PackageCodeEntity> get(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException;
+    void update(PackageCodeEntity entity) throws DBServiceException;
 }

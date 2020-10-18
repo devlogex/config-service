@@ -42,7 +42,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     private CacheHelper cacheHelper;
 
     @Override
-    public UserRepresentation loginWorkspace(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException, LoginException {
+    public UserRepresentation loginWorkspace(UserRequest request) throws DBServiceException, UserProfileNotFoundException, LoginException {
         UserProfileEntity userProfile = null;
         try{
             userProfile = userService.getUserProfile(UserProfileEntity.builder().id(request.getPayload().getUserId()).build()).get(0);
@@ -93,7 +93,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     }
 
     @Override
-    public UserRepresentation login(AnonymousRequest request) throws IOException, DBServiceException, LoginException {
+    public UserRepresentation login(AnonymousRequest request) throws DBServiceException, LoginException {
         UserProfileEntity userProfile = null;
         try{
             userProfile = userService.getUserProfile(UserProfileEntity.builder().email(request.getEmail()).build()).get(0);
@@ -117,7 +117,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     }
 
     @Override
-    public UserRepresentation createUser(AnonymousRequest request) throws IOException, DBServiceException {
+    public UserRepresentation createUser(AnonymousRequest request) throws DBServiceException {
         UserProfileEntity userProfile = userService.createUserProfile(
                 UserProfileEntity.builder()
                         .firstName(request.getFirstName())
@@ -144,14 +144,14 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     }
 
     @Override
-    public UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+    public UserRepresentation getCurrentUser(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         Long userId = request.getPayload().getUserId();
         UserProfileEntity userProfile = userService.getUserProfile(UserProfileEntity.builder().id(userId).build()).get(0);
         return RepresentationBuilder.buildUserRepresentation(userProfile);
     }
 
     @Override
-    public UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+    public UserRepresentation updateUserInfo(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         UserProfileEntity userProfile = userService.getUserProfile(UserProfileEntity.builder().id(request.getPayload().getUserId()).build()).get(0);
         if(request.getFirstName() != null) {
             userProfile.setFirstName(request.getFirstName());
@@ -173,7 +173,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     }
 
     @Override
-    public CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException, IOException {
+    public CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException {
         List<UserProfileEntity> userProfiles = userService.getUserProfile(
                 UserProfileEntity.builder()
                         .id(request.getId())
@@ -183,7 +183,7 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
     }
 
     @Override
-    public CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException, IOException {
+    public CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException {
         Long productId = request.getId();
         List<UserConfigEntity> userConfigs = userService.getUserConfig(
                 UserConfigEntity.builder()

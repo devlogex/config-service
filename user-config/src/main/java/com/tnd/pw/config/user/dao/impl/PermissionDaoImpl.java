@@ -25,14 +25,14 @@ public class PermissionDaoImpl implements PermissionDao {
             "SELECT * FROM permission WHERE id = %d";
 
     @Override
-    public void create(PermissionEntity entity) throws IOException, DBServiceException {
+    public void create(PermissionEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getName(),
                 entity.getPermissions());
         dataHelper.executeSQL(query);
     }
 
     @Override
-    public List<PermissionEntity> get(PermissionEntity entity) throws IOException, DBServiceException, PermissionNotFoundException {
+    public List<PermissionEntity> get(PermissionEntity entity) throws DBServiceException, PermissionNotFoundException {
         String query = String.format(SQL_SELECT_BY_ID, entity.getId());
         List<PermissionEntity> entities = dataHelper.querySQL(query, PermissionEntity.class);
         if(CollectionUtils.isEmpty(entities)) {
@@ -42,7 +42,7 @@ public class PermissionDaoImpl implements PermissionDao {
     }
 
     @Override
-    public void update(PermissionEntity entity) throws IOException, DBServiceException {
+    public void update(PermissionEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getPermissions(),
                 entity.getName(), entity.getId());
         dataHelper.executeSQL(query);

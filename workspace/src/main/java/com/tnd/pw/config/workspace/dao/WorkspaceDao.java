@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface WorkspaceDao {
-    void create(WorkspaceEntity entity) throws IOException, DBServiceException;
-    List<WorkspaceEntity> get(WorkspaceEntity entity) throws IOException, DBServiceException, WorkspaceNotFoundException;
-    void update(WorkspaceEntity entity) throws IOException, DBServiceException;
+    void create(WorkspaceEntity entity) throws DBServiceException;
+    List<WorkspaceEntity> get(WorkspaceEntity entity) throws DBServiceException, WorkspaceNotFoundException;
+    void update(WorkspaceEntity entity) throws DBServiceException;
 }

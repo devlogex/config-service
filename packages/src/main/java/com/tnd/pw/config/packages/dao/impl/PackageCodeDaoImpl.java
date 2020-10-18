@@ -24,7 +24,7 @@ public class PackageCodeDaoImpl implements PackageCodeDao {
             "SELECT * FROM package_code WHERE id = %d";
 
     @Override
-    public void create(PackageCodeEntity entity) throws IOException, DBServiceException {
+    public void create(PackageCodeEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getPackageId(),
                 entity.getExpireTime(), entity.getState(), entity.getCreatedAt(),entity.getCreatedBy(),
                 entity.getUpdatedAt(), entity.getUpdatedBy());
@@ -32,7 +32,7 @@ public class PackageCodeDaoImpl implements PackageCodeDao {
     }
 
     @Override
-    public List<PackageCodeEntity> get(PackageCodeEntity entity) throws IOException, DBServiceException, PackageCodeNotFoundException {
+    public List<PackageCodeEntity> get(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException {
         String query = String.format(SQL_SELECT_BY_ID, entity.getId());
         List<PackageCodeEntity> entities = dataHelper.querySQL(query, PackageCodeEntity.class);
         if(CollectionUtils.isEmpty(entities)) {
@@ -42,7 +42,7 @@ public class PackageCodeDaoImpl implements PackageCodeDao {
     }
 
     @Override
-    public void update(PackageCodeEntity entity) throws IOException, DBServiceException {
+    public void update(PackageCodeEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getState(),
                 entity.getUpdatedAt(), entity.getUpdatedBy(), entity.getId());
         dataHelper.executeSQL(query);

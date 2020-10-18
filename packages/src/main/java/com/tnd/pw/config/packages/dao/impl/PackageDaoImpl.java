@@ -28,7 +28,7 @@ public class PackageDaoImpl implements PackageDao {
             "SELECT * FROM package ORDER BY created_at";
 
     @Override
-    public void create(PackageEntity entity) throws IOException, DBServiceException {
+    public void create(PackageEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getName(),
                 entity.getDescription(),entity.getMaxProduct(),
                 entity.getMaxMember(), entity.getPrice(), entity.getPeriodValidity(),
@@ -37,7 +37,7 @@ public class PackageDaoImpl implements PackageDao {
     }
 
     @Override
-    public List<PackageEntity> get(PackageEntity entity) throws IOException, DBServiceException, PackageNotFoundException {
+    public List<PackageEntity> get(PackageEntity entity) throws DBServiceException, PackageNotFoundException {
         String query;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -56,7 +56,7 @@ public class PackageDaoImpl implements PackageDao {
     }
 
     @Override
-    public void update(PackageEntity entity) throws IOException, DBServiceException {
+    public void update(PackageEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getState(),
                 entity.getUpdatedAt(), entity.getUpdatedBy(), entity.getId());
         dataHelper.executeSQL(query);

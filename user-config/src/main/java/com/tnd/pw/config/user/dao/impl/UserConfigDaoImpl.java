@@ -39,7 +39,7 @@ public class UserConfigDaoImpl implements UserConfigDao {
             "SELECT * FROM user_config WHERE workspace_permissions LIKE '%s' AND workspace_id = %d AND STATE = %d";
 
     @Override
-    public void create(UserConfigEntity entity) throws IOException, DBServiceException {
+    public void create(UserConfigEntity entity) throws DBServiceException {
         String query = String.format(SQL_CREATE, entity.getId(), entity.getUserId(),
                 entity.getWorkspaceId(), entity.getWorkspacePermissions(), entity.getProductPermissions(),
                 entity.getState(), entity.getCreatedAt(),entity.getCreatedBy());
@@ -47,7 +47,7 @@ public class UserConfigDaoImpl implements UserConfigDao {
     }
 
     @Override
-    public List<UserConfigEntity> get(UserConfigEntity entity) throws IOException, DBServiceException, UserConfigNotFoundException {
+    public List<UserConfigEntity> get(UserConfigEntity entity) throws DBServiceException, UserConfigNotFoundException {
         String query = null;
         if(entity.getId() != null) {
             query = String.format(SQL_SELECT_BY_ID, entity.getId());
@@ -85,7 +85,7 @@ public class UserConfigDaoImpl implements UserConfigDao {
     }
 
     @Override
-    public void update(UserConfigEntity entity) throws IOException, DBServiceException {
+    public void update(UserConfigEntity entity) throws DBServiceException {
         String query = String.format(SQL_UPDATE, entity.getWorkspacePermissions(),
                 entity.getProductPermissions(), entity.getState(),
                 entity.getUpdatedAt(), entity.getUpdatedBy(), entity.getId());

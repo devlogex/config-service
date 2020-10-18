@@ -16,7 +16,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public ProductEntity create(ProductEntity entity) throws IOException, DBServiceException {
+    public ProductEntity create(ProductEntity entity) throws DBServiceException {
         entity.setId(GenUID.genProductID());
         entity.setCreatedAt(System.currentTimeMillis());
         productDao.create(entity);
@@ -24,12 +24,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductEntity> get(ProductEntity entity) throws IOException, DBServiceException, ProductNotFoundException {
+    public List<ProductEntity> get(ProductEntity entity) throws DBServiceException, ProductNotFoundException {
         return productDao.get(entity);
     }
 
     @Override
-    public void remove(ProductEntity entity) throws IOException, DBServiceException {
+    public void remove(ProductEntity entity) throws DBServiceException {
         productDao.remove(entity);
     }
 }

@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserProfileDao {
-    void create(UserProfileEntity entity) throws IOException, DBServiceException;
-    List<UserProfileEntity> get(UserProfileEntity entity) throws IOException, DBServiceException, UserProfileNotFoundException;
-    List<UserProfileEntity> get(List<Long> ids) throws IOException, DBServiceException, UserProfileNotFoundException;
-    void update(UserProfileEntity entity) throws IOException, DBServiceException;
+    void create(UserProfileEntity entity) throws DBServiceException;
+    List<UserProfileEntity> get(UserProfileEntity entity) throws DBServiceException, UserProfileNotFoundException;
+    List<UserProfileEntity> get(List<Long> ids) throws DBServiceException, UserProfileNotFoundException;
+    void update(UserProfileEntity entity) throws DBServiceException;
 }

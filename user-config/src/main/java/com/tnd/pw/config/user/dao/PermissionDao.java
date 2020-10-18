@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PermissionDao {
-    void create(PermissionEntity entity) throws IOException, DBServiceException;
-    List<PermissionEntity> get(PermissionEntity entity) throws IOException, DBServiceException, PermissionNotFoundException;
-    void update(PermissionEntity entity) throws IOException, DBServiceException;
+    void create(PermissionEntity entity) throws DBServiceException;
+    List<PermissionEntity> get(PermissionEntity entity) throws DBServiceException, PermissionNotFoundException;
+    void update(PermissionEntity entity) throws DBServiceException;
 }

@@ -58,4 +58,12 @@ public class PackageHandler implements BaseHandler {
         LOGGER.info("[PackageHandler] registerPackage() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
+
+    @HandlerService(path = "/config/package/statistical", protocol = "GET")
+    public BaseResponse<CsPackageRepresentation> statisticalPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
+        LOGGER.info("[PackageHandler] statisticalPackage() - request: {}", GsonUtils.convertToString(request));
+        CsPackageRepresentation response = packageServiceHandler.statisticalPackage(request);
+        LOGGER.info("[PackageHandler] statisticalPackage() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
 }

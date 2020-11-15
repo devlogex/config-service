@@ -32,4 +32,9 @@ public class ProductServiceImpl implements ProductService {
     public void remove(ProductEntity entity) throws DBServiceException {
         productDao.remove(entity);
     }
+
+    @Override
+    public void update(ProductEntity entity) throws DBServiceException {
+        productDao.update(entity);
+    }
 }

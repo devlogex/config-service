@@ -26,4 +26,6 @@ public interface UserServiceHandler {
     CsUserRepresentation getUserProfile(UserRequest request) throws DBServiceException, UserProfileNotFoundException;
 
     CsUserRepresentation getUserOfProduct(UserRequest request) throws DBServiceException, UserConfigNotFoundException;
+
+    CsUserRepresentation getUserProfiles(UserRequest request) throws DBServiceException;
 }

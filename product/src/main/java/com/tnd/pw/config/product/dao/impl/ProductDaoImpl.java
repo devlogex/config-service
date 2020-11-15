@@ -18,6 +18,9 @@ public class ProductDaoImpl implements ProductDao {
     private static final String SQL_CREATE =
             "INSERT INTO product(id, name, type, parent, workspace_id, created_at, created_by) " +
                     "values(%d, '%s', %d, %d, %d, %d, %d)";
+    private static final String SQL_UPDATE =
+            "UPDATE product SET name = '%s', description = '%s', files = '%s' " +
+                    "WHERE id = %d";
     private static final String SQL_SELECT_BY_ID =
             "SELECT * FROM product WHERE id = %d ORDER BY created_at";
     private static final String SQL_SELECT_BY_WORKSPACE_ID =
@@ -51,6 +54,13 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public void remove(ProductEntity entity) throws DBServiceException {
         String query = String.format(SQL_DELETE, entity.getId());
+        dataHelper.executeSQL(query);
+    }
+
+    @Override
+    public void update(ProductEntity entity) throws DBServiceException {
+        String query = String.format(SQL_UPDATE, entity.getName(),
+                entity.getDescription(), entity.getFiles(), entity.getId());
         dataHelper.executeSQL(query);
     }
 }

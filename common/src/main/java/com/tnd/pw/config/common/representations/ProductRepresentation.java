@@ -21,6 +21,10 @@ public class ProductRepresentation implements Serializable {
     private String parent;
     @SerializedName("workspace_id")
     private String workspaceId;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("files")
+    private String files;
     @SerializedName("created_at")
     private String createdAt;
     @SerializedName("created_by")

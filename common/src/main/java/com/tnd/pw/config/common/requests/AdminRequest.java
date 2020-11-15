@@ -26,4 +26,15 @@ public class AdminRequest extends TokenRequest {
     private Long periodValidity;
     @SerializedName("state")
     private String state;
+
+    @SerializedName("start_month")
+    private Integer startMonth;
+    @SerializedName("start_year")
+    private Integer startYear;
+    @SerializedName("end_month")
+    private Integer endMonth;
+    @SerializedName("end_year")
+    private Integer endYear;
+    @SerializedName("group_type")
+    private String groupType;
 }

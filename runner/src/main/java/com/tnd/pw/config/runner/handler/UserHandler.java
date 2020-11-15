@@ -76,6 +76,14 @@ public class UserHandler implements BaseHandler {
         return new BaseResponse<>(response);
     }
 
+    @HandlerService(method = Methods.GET_LIST_USER_PROFILE, path = "/config/user/profile", protocol = "GET")
+    public BaseResponse<CsUserRepresentation> getUserProfiles(UserRequest request) throws DBServiceException {
+        LOGGER.info("[UserHandler] getUserProfiles() - request: {}", GsonUtils.convertToString(request));
+        CsUserRepresentation response = userServiceHandler.getUserProfiles(request);
+        LOGGER.info("[UserHandler] getUserProfiles() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
     @HandlerService(path = "/config/user/product", protocol = "GET")
     public BaseResponse<CsUserRepresentation> getUserOfProduct(UserRequest request) throws DBServiceException, UserProfileNotFoundException, UserConfigNotFoundException {
         LOGGER.info("[UserHandler] getUserOfProduct() - request: {}", GsonUtils.convertToString(request));

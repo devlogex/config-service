@@ -53,6 +53,8 @@ import java.util.List;
 
 public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkspaceServiceHandlerImpl.class);
+    private static final String DefaultPassword = "password";
+
     @Autowired
     private PackageService packageService;
     @Autowired
@@ -188,6 +190,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             UserProfileEntity userProfileEntity = userService.getUserProfile(
                     UserProfileEntity.builder()
                             .email(request.getEmail())
+                            .password(DefaultPassword)
                             .build()
             ).get(0);
             try {
@@ -330,21 +333,19 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             }
             userConfigEntity.setWorkspacePermissions("");
         } else {
-            Long productId = (Long) request.getPermission().keySet().toArray()[0];
             if(request.getPermission().containsValue(UserPermissions.OWNER)) {
-                if(permissions.containsValue(UserPermissions.OWNER)) {
-                    permissions.put(productId, request.getPermission().get(productId));
-                } else {
+                if(!permissions.containsValue(UserPermissions.OWNER)) {
                     for (Long key : permissions.keySet()) {
                         permissions.replace(key, UserPermissions.OWNER);
                     }
+                    permissions.putAll(request.getPermission());
                     userConfigEntity.setWorkspacePermissions(UserPermissions.OWNER);
                 }
             } else {
                 if(permissions.containsValue(UserPermissions.OWNER)) {
                     throw new InvalidDataException("User was Owner !");
                 }
-                permissions.put(productId, request.getPermission().get(productId));
+                permissions.putAll(request.getPermission());
             }
         }
         userConfigEntity.setProductPermissions(GsonUtils.convertToString(permissions));

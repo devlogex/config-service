@@ -13,4 +13,6 @@ public interface PackageCodeDao {
     void create(PackageCodeEntity entity) throws DBServiceException;
     List<PackageCodeEntity> get(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException;
     void update(PackageCodeEntity entity) throws DBServiceException;
+
+    List<PackageCodeEntity> get(Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException;
 }

@@ -23,6 +23,10 @@ public class ProductEntity implements Serializable {
     private Long parent;
     @SerializedName("workspace_id")
     private Long workspaceId;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("files")
+    private String files;
     @SerializedName("created_at")
     private Long createdAt;
     @SerializedName("created_by")

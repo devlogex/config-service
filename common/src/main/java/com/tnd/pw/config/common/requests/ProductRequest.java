@@ -16,5 +16,10 @@ import java.util.HashMap;
 public class ProductRequest extends ProductTokenRequest {
     private static final long serialVersionUID = 1L;
 
-
+    @SerializedName("name")
+    private String name;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("files")
+    private String files;
 }

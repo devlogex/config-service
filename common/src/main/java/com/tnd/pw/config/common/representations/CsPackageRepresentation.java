@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 @Getter
 @Setter
 public class CsPackageRepresentation implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    public CsPackageRepresentation() {
+    }
     public CsPackageRepresentation(List<PackageRepresentation> packageReps) {
         this.packageReps = packageReps;
     }
@@ -24,4 +27,11 @@ public class CsPackageRepresentation implements Serializable {
 
     @SerializedName("code")
     private String code;
+
+    @SerializedName("statistical_monthly")
+    private TreeMap<String, Long> statisticalMonthly;
+
+    @SerializedName("statistical_quarterly")
+    private TreeMap<String, Long> statisticalQuarterly;
+
 }

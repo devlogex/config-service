@@ -7,6 +7,8 @@ import com.tnd.pw.config.common.representations.CsUserRepresentation;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.sdk.ConfigServiceSdkClient;
 
+import java.util.List;
+
 public class ConfigServiceSdkClientImpl extends AbstractService implements ConfigServiceSdkClient {
 
     public ConfigServiceSdkClientImpl(String host, int port, int appId) {
@@ -18,5 +20,12 @@ public class ConfigServiceSdkClientImpl extends AbstractService implements Confi
         UserRequest request = new UserRequest();
         request.setId(id);
         return client.sendRequest(Methods.GET_USER_PROFILE, request);
+    }
+
+    @Override
+    public BaseResponse<CsUserRepresentation> getUserProfiles(List<Long> userIds) {
+        UserRequest request = new UserRequest();
+        request.setUserIds(userIds);
+        return client.sendRequest(Methods.GET_LIST_USER_PROFILE, request);
     }
 }

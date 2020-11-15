@@ -11,4 +11,5 @@ public interface ProductDao {
     void create(ProductEntity entity) throws DBServiceException;
     List<ProductEntity> get(ProductEntity entity) throws DBServiceException, ProductNotFoundException;
     void remove(ProductEntity entity) throws DBServiceException;
+    void update(ProductEntity entity) throws DBServiceException;
 }

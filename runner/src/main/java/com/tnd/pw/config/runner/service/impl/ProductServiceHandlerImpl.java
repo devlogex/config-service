@@ -8,6 +8,8 @@ import com.tnd.common.cache.redis.CacheHelper;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.constants.CacheKeys;
 import com.tnd.pw.config.common.representations.CsProductRepresentation;
+import com.tnd.pw.config.common.representations.ProductRepresentation;
+import com.tnd.pw.config.common.requests.ProductRequest;
 import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.common.utils.RepresentationBuilder;
@@ -100,6 +102,26 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
                 ));
 
         return RepresentationBuilder.buildListProductRep(productEntities, token, productMapping);
+    }
+
+    @Override
+    public ProductRepresentation updateProduct(ProductRequest request) throws DBServiceException, ProductNotFoundException {
+        ProductEntity productEntity = productService.get(
+                ProductEntity.builder()
+                        .id(request.getId())
+                        .build()
+        ).get(0);
+        if(request.getName() != null) {
+            productEntity.setName(request.getName());
+        }
+        if(request.getDescription() != null) {
+            productEntity.setDescription(request.getDescription());
+        }
+        if(request.getFiles() != null) {
+            productEntity.setFiles(request.getFiles());
+        }
+        productService.update(productEntity);
+        return RepresentationBuilder.buildProductRepresentation(productEntity);
     }
 
     private List<UserConfigEntity> addPermissionOnProduct(ProductEntity productEntity) throws DBServiceException, UserConfigNotFoundException {

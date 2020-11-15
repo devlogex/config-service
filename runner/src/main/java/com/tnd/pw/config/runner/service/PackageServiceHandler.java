@@ -16,4 +16,6 @@ public interface PackageServiceHandler {
     CsPackageRepresentation getPackage(AnonymousRequest request) throws DBServiceException, PackageNotFoundException;
     PackageRepresentation updatePackage(AdminRequest request) throws DBServiceException, PackageNotFoundException;
     CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException;
+
+    CsPackageRepresentation statisticalPackage(AdminRequest request) throws DBServiceException;
 }

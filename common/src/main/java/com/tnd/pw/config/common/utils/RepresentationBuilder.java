@@ -2,6 +2,7 @@ package com.tnd.pw.config.common.utils;
 
 import com.tnd.common.api.common.base.authens.UserPermission;
 import com.tnd.pw.config.common.representations.*;
+import com.tnd.pw.config.packages.entity.PackageCodeEntity;
 import com.tnd.pw.config.packages.enums.PackageState;
 import com.tnd.pw.config.packages.entity.PackageEntity;
 import com.tnd.pw.config.product.entity.ProductEntity;
@@ -11,9 +12,7 @@ import com.tnd.pw.config.workspace.config.entity.WorkspaceConfigEntity;
 import com.tnd.pw.config.workspace.entity.WorkspaceEntity;
 import com.tnd.pw.config.workspace.enums.WorkspaceState;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class RepresentationBuilder {
 
@@ -86,6 +85,8 @@ public class RepresentationBuilder {
             productRepresentation.setParent(productEntity.getParent().toString());
         }
         productRepresentation.setWorkspaceId(productEntity.getWorkspaceId().toString());
+        productRepresentation.setDescription(productEntity.getDescription());
+        productRepresentation.setFiles(productEntity.getFiles());
         productRepresentation.setName(productEntity.getName());
         productRepresentation.setType(ProductType.values()[productEntity.getType()].name());
         return productRepresentation;
@@ -190,10 +191,11 @@ public class RepresentationBuilder {
 
     public static CsUserRepresentation buildListUserProfile(List<UserProfileEntity> userProfiles) {
         List<UserRepresentation> userReps = new ArrayList<>();
-        if(userProfiles != null) {
-            for (UserProfileEntity entity : userProfiles) {
-                userReps.add(buildUserProfile(entity));
-            }
+        if(userProfiles == null) {
+            userProfiles = new ArrayList<>();
+        }
+        for (UserProfileEntity entity : userProfiles) {
+            userReps.add(buildUserProfile(entity));
         }
         return new CsUserRepresentation(userReps);
     }
@@ -207,5 +209,29 @@ public class RepresentationBuilder {
         representation.setFirstName(entity.getFirstName());
         representation.setLastName(entity.getLastName());
         return representation;
+    }
+
+    public static CsPackageRepresentation buildStatisticalMonthly(List<PackageCodeEntity> packageCodeEntities, Long startTime, Long endTime) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(startTime);
+        TreeMap<String, Long> map = new TreeMap<>();
+        while(cal.getTimeInMillis() <= endTime) {
+            long start = cal.getTimeInMillis();
+            cal.add(Calendar.MONTH, 1);
+            cal.add(Calendar.DATE, -1);
+            long end = cal.getTimeInMillis();
+
+            long count = packageCodeEntities.stream().filter(packageCode -> packageCode.getCreatedAt() >= start && packageCode.getCreatedAt() <= end).count();
+            map.put(String.format("%d/%d", cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)), count);
+
+            cal.add(Calendar.DATE, 1);
+        }
+        CsPackageRepresentation representation = new CsPackageRepresentation();
+        representation.setStatisticalMonthly(map);
+        return representation;
+    }
+
+    public static CsPackageRepresentation buildStatisticalQuarterly(List<PackageCodeEntity> packageCodeEntities, Long startTime, Long endTime) {
+        return null;
     }
 }

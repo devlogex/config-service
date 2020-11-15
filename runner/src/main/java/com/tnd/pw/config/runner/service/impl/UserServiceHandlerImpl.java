@@ -202,6 +202,16 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
         return RepresentationBuilder.buildListUserProfile(userProfiles);
     }
 
+    @Override
+    public CsUserRepresentation getUserProfiles(UserRequest request) throws DBServiceException {
+        List<UserProfileEntity> userProfiles = null;
+        try {
+            userProfiles = userService.getUserProfile(request.getUserIds());
+        } catch (UserProfileNotFoundException e) {
+        }
+        return RepresentationBuilder.buildListUserProfile(userProfiles);
+    }
+
     private List<Long> getListUserId(List<UserConfigEntity> userConfigs, Long productId) {
         List<Long> userIds = new ArrayList<>();
         for(UserConfigEntity userConfig: userConfigs) {

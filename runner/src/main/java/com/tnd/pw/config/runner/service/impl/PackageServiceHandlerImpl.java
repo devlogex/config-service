@@ -2,6 +2,7 @@ package com.tnd.pw.config.runner.service.impl;
 
 import com.tnd.com.notification.NotificationService;
 import com.tnd.dbservice.common.exception.DBServiceException;
+import com.tnd.pw.config.common.constants.GroupType;
 import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
@@ -12,6 +13,7 @@ import com.tnd.pw.config.common.representations.CsPackageRepresentation;
 import com.tnd.pw.config.common.representations.PackageRepresentation;
 import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.packages.entity.PackageEntity;
+import com.tnd.pw.config.packages.exception.PackageCodeNotFoundException;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 import com.tnd.pw.config.packages.service.PackageService;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class PackageServiceHandlerImpl implements PackageServiceHandler {
@@ -77,5 +81,25 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
         );
 //        notificationService.send(request.getPayload().getEmail(), "Package_Code", packageCode.getId().toString());
         return new CsPackageRepresentation(packageCode.getId().toString());
+    }
+
+    @Override
+    public CsPackageRepresentation statisticalPackage(AdminRequest request) throws DBServiceException {
+        Calendar cal = Calendar.getInstance();
+        cal.set(request.getStartYear(), request.getStartMonth(), 1);
+        Long startTime = cal.getTimeInMillis();
+        cal.set(request.getEndYear(), request.getEndMonth(), 1);
+        cal.set(request.getEndYear(), request.getEndMonth(), cal.getActualMaximum(Calendar.DATE));
+        Long endTime = cal.getTimeInMillis();
+
+        List<PackageCodeEntity> packageCodeEntities = null;
+        try {
+            packageCodeEntities = packageService.getPackageCode(startTime, endTime);
+        } catch (PackageCodeNotFoundException e) {
+        }
+
+        return GroupType.valueOf(request.getGroupType()) == GroupType.MONTHLY ?
+                RepresentationBuilder.buildStatisticalMonthly(packageCodeEntities, startTime, endTime):
+                RepresentationBuilder.buildStatisticalQuarterly(packageCodeEntities, startTime, endTime);
     }
 }

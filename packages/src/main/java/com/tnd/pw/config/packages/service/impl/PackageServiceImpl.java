@@ -56,4 +56,9 @@ public class PackageServiceImpl implements PackageService {
         entity.setUpdatedAt(System.currentTimeMillis());
         packageCodeDao.update(entity);
     }
+
+    @Override
+    public List<PackageCodeEntity> getPackageCode(Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException {
+        return packageCodeDao.get(startTime, endTime);
+    }
 }

@@ -6,6 +6,8 @@ import com.tnd.common.api.common.base.authens.TokenRequest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserRequest extends TokenRequest {
@@ -15,6 +17,8 @@ public class UserRequest extends TokenRequest {
     private Long code;
     @SerializedName("id")
     private Long id;
+    @SerializedName("list_user_id")
+    private List<Long> userIds;
 
     @SerializedName("first_name")
     private String firstName;

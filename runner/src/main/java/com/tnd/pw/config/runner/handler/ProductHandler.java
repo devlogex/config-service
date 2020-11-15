@@ -7,6 +7,8 @@ import com.tnd.common.api.server.service.annotation.HandlerService;
 import com.tnd.common.api.server.service.annotation.HandlerServiceClass;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.representations.CsProductRepresentation;
+import com.tnd.pw.config.common.representations.ProductRepresentation;
+import com.tnd.pw.config.common.requests.ProductRequest;
 import com.tnd.pw.config.common.requests.WorkspaceRequest;
 import com.tnd.pw.config.common.utils.GsonUtils;
 import com.tnd.pw.config.product.exception.ProductNotFoundException;
@@ -33,6 +35,14 @@ public class ProductHandler implements BaseHandler {
         LOGGER.info("[ProductHandler] addProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.addProduct(request);
         LOGGER.info("[ProductHandler] addProduct() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/product/update", protocol = "POST")
+    public BaseResponse<ProductRepresentation> updateProduct(ProductRequest request) throws DBServiceException, ProductNotFoundException, PermissionNotFoundException, UserConfigNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
+        LOGGER.info("[ProductHandler] updateProduct() - request: {}", GsonUtils.convertToString(request));
+        ProductRepresentation response = productServiceHandler.updateProduct(request);
+        LOGGER.info("[ProductHandler] updateProduct() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 

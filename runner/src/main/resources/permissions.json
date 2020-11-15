@@ -5,15 +5,17 @@
       "/config/.*",
       "/strategy/.*",
       "/action/.*",
-      "/development/.*"
+      "/development/.*",
+      "/report/.*"
     ]
   },
   {
-    "name": "CONTRIBUTE",
+    "name": "CONTRIBUTOR",
     "permissions": [
       "/strategy/.*",
       "/action/.*",
-      "/development/.*"
+      "/development/.*",
+      "/report/.*"
     ]
   },
   {
@@ -30,7 +32,8 @@
       "/strategy/vision",
       "/strategy/vision_component",
       "/action/.*",
-      "/development/.*"
+      "/development/.*",
+      "/report/.*"
     ]
   },
   {
@@ -52,7 +55,8 @@
       "/development/feature",
       "/development/release/epic",
       "/development/release/phase",
-      "/development/feature/requirement"
+      "/development/feature/requirement",
+      "/report/.*"
     ]
   },
   {

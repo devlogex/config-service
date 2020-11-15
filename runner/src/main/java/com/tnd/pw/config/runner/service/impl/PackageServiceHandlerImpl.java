@@ -1,28 +1,26 @@
 package com.tnd.pw.config.runner.service.impl;
 
+
 import com.tnd.com.notification.NotificationService;
 import com.tnd.dbservice.common.exception.DBServiceException;
 import com.tnd.pw.config.common.constants.GroupType;
+import com.tnd.pw.config.common.representations.CsPackageRepresentation;
+import com.tnd.pw.config.common.representations.PackageRepresentation;
 import com.tnd.pw.config.common.requests.AdminRequest;
 import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
+import com.tnd.pw.config.common.utils.RepresentationBuilder;
 import com.tnd.pw.config.packages.entity.PackageCodeEntity;
+import com.tnd.pw.config.packages.entity.PackageEntity;
 import com.tnd.pw.config.packages.enums.PackageCodeState;
 import com.tnd.pw.config.packages.enums.PackageState;
-import com.tnd.pw.config.common.representations.CsPackageRepresentation;
-import com.tnd.pw.config.common.representations.PackageRepresentation;
-import com.tnd.pw.config.common.utils.RepresentationBuilder;
-import com.tnd.pw.config.packages.entity.PackageEntity;
 import com.tnd.pw.config.packages.exception.PackageCodeNotFoundException;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 import com.tnd.pw.config.packages.service.PackageService;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class PackageServiceHandlerImpl implements PackageServiceHandler {
@@ -70,7 +68,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException {
+    public CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException {
         PackageEntity packageEntity = packageService.getPackage(PackageEntity.builder().id(request.getId()).build()).get(0);
         PackageCodeEntity packageCode = packageService.createPackageCode(
                 PackageCodeEntity.builder()

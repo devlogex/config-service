@@ -8,14 +8,12 @@ import com.tnd.pw.config.common.requests.AnonymousRequest;
 import com.tnd.pw.config.common.requests.UserRequest;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 
 public interface PackageServiceHandler {
     CsPackageRepresentation addPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException;
     CsPackageRepresentation getPackage(AnonymousRequest request) throws DBServiceException, PackageNotFoundException;
     PackageRepresentation updatePackage(AdminRequest request) throws DBServiceException, PackageNotFoundException;
-    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException;
+    CsPackageRepresentation registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException;
 
     CsPackageRepresentation statisticalPackage(AdminRequest request) throws DBServiceException;
 }

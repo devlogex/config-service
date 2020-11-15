@@ -52,7 +52,7 @@ public class PackageHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/package/register", protocol = "POST")
-    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException, MessagingException {
+    public BaseResponse<CsPackageRepresentation> registerPackage(UserRequest request) throws DBServiceException, PackageNotFoundException {
         LOGGER.info("[PackageHandler] registerPackage() - request: {}", GsonUtils.convertToString(request));
         CsPackageRepresentation response = packageServiceHandler.registerPackage(request);
         LOGGER.info("[PackageHandler] registerPackage() - response: {}", GsonUtils.convertToString(response));

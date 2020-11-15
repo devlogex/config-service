@@ -76,7 +76,7 @@ public class UserHandler implements BaseHandler {
         return new BaseResponse<>(response);
     }
 
-    @HandlerService(method = Methods.GET_LIST_USER_PROFILE, path = "/config/user/profile", protocol = "GET")
+    @HandlerService(method = Methods.GET_LIST_USER_PROFILE, path = "/config/user/profiles", protocol = "GET")
     public BaseResponse<CsUserRepresentation> getUserProfiles(UserRequest request) throws DBServiceException {
         LOGGER.info("[UserHandler] getUserProfiles() - request: {}", GsonUtils.convertToString(request));
         CsUserRepresentation response = userServiceHandler.getUserProfiles(request);

@@ -21,16 +21,7 @@
   {
     "name": "REVIEWER",
     "permissions": [
-      "/strategy/competitor",
-      "/strategy/goal",
-      "/strategy/initiative",
-      "/strategy/model",
-      "/strategy/model_component",
-      "/strategy/personas",
-      "/strategy/position",
-      "/strategy/position_component",
-      "/strategy/vision",
-      "/strategy/vision_component",
+      "^/strategy((?!(add|update|delete)).)+$",
       "/action/.*",
       "/development/.*",
       "/report/.*"
@@ -39,23 +30,9 @@
   {
     "name": "VIEWER",
     "permissions": [
-      "/strategy/competitor",
-      "/strategy/goal",
-      "/strategy/initiative",
-      "/strategy/model",
-      "/strategy/model_component",
-      "/strategy/personas",
-      "/strategy/position",
-      "/strategy/position_component",
-      "/strategy/vision",
-      "/strategy/vision_component",
-      "/action/todo",
-      "/action/comment.*",
-      "/development/release",
-      "/development/feature",
-      "/development/release/epic",
-      "/development/release/phase",
-      "/development/feature/requirement",
+      "^/strategy((?!(add|update|delete)).)+$",
+      "/action/.*",
+      "^/development((?!(add|update|delete)).)+$",
       "/report/.*"
     ]
   },

@@ -46,14 +46,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkspaceServiceHandlerImpl.class);
-    private static final String DefaultPassword = "password";
+    private static final String DEFAULT_PASSWORD = "password";
 
     @Autowired
     private PackageService packageService;
@@ -190,7 +189,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             UserProfileEntity userProfileEntity = userService.getUserProfile(
                     UserProfileEntity.builder()
                             .email(request.getEmail())
-                            .password(DefaultPassword)
+                            .password(DEFAULT_PASSWORD)
                             .build()
             ).get(0);
             try {

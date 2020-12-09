@@ -17,5 +17,5 @@ public interface PackageService {
     PackageCodeEntity createPackageCode(PackageCodeEntity entity) throws DBServiceException;
     List<PackageCodeEntity> getPackageCode(PackageCodeEntity entity) throws DBServiceException, PackageCodeNotFoundException;
     void updatePackageCode(PackageCodeEntity entity) throws DBServiceException;
-    List<PackageCodeEntity> getPackageCode(Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException;
+    List<PackageCodeEntity> getPackageCode(Long packageId, Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException;
 }

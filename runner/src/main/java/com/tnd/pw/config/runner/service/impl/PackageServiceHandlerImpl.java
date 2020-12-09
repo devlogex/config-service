@@ -18,8 +18,16 @@ import com.tnd.pw.config.packages.exception.PackageCodeNotFoundException;
 import com.tnd.pw.config.packages.exception.PackageNotFoundException;
 import com.tnd.pw.config.packages.service.PackageService;
 import com.tnd.pw.config.runner.service.PackageServiceHandler;
+import com.tnd.pw.config.workspace.config.entity.WorkspaceConfigEntity;
+import com.tnd.pw.config.workspace.config.exception.WorkspaceConfigNotFoundException;
+import com.tnd.pw.config.workspace.config.service.WorkspaceConfigService;
+import com.tnd.pw.config.workspace.enums.WorkspaceState;
+import com.tnd.pw.config.workspace.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +36,10 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     private PackageService packageService;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private WorkspaceService workspaceService;
+    @Autowired
+    private WorkspaceConfigService workspaceConfigService;
 
     @Override
     public CsPackageRepresentation addPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
@@ -75,6 +87,7 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
                         .packageId(packageEntity.getId())
                         .state(PackageCodeState.ACTIVE.ordinal())
                         .expireTime(System.currentTimeMillis() + packageEntity.getPeriodValidity())
+                        .price(packageEntity.getPrice())
                         .build()
         );
 //        notificationService.send(request.getPayload().getEmail(), "Package_Code", packageCode.getId().toString());
@@ -82,22 +95,42 @@ public class PackageServiceHandlerImpl implements PackageServiceHandler {
     }
 
     @Override
-    public CsPackageRepresentation statisticalPackage(AdminRequest request) throws DBServiceException {
-        Calendar cal = Calendar.getInstance();
-        cal.set(request.getStartYear(), request.getStartMonth(), 1);
-        Long startTime = cal.getTimeInMillis();
-        cal.set(request.getEndYear(), request.getEndMonth(), 1);
-        cal.set(request.getEndYear(), request.getEndMonth(), cal.getActualMaximum(Calendar.DATE));
-        Long endTime = cal.getTimeInMillis();
+    public CsPackageRepresentation statisticPackageDetail(AdminRequest request) throws DBServiceException {
+        LocalDateTime localDateTime = LocalDateTime.of(request.getStartYear(), request.getStartMonth(), 1, 1, 0);
+        Long startTime = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        localDateTime = LocalDateTime.of(request.getEndYear(), request.getEndMonth(), 1, 23, 59);
+        localDateTime = localDateTime.plusMonths(1).plusDays(-1);
+        Long endTime = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        List<PackageCodeEntity> packageCodeEntities = null;
+        List<PackageCodeEntity> packageCodeEntities = new ArrayList<>();
         try {
-            packageCodeEntities = packageService.getPackageCode(startTime, endTime);
+            packageCodeEntities = packageService.getPackageCode(request.getId(), startTime, endTime);
         } catch (PackageCodeNotFoundException e) {
         }
 
         return GroupType.valueOf(request.getGroupType()) == GroupType.MONTHLY ?
                 RepresentationBuilder.buildStatisticalMonthly(packageCodeEntities, startTime, endTime):
                 RepresentationBuilder.buildStatisticalQuarterly(packageCodeEntities, startTime, endTime);
+    }
+
+    @Override
+    public CsPackageRepresentation statisticPackageList(AdminRequest request) throws DBServiceException {
+        List<PackageEntity> packageEntities = new ArrayList<>();
+        List<WorkspaceConfigEntity> workspaceConfigEntities = new ArrayList<>();
+        try {
+            packageEntities = packageService.getPackage(
+                    PackageEntity.builder()
+                            .state(request.getState() != null ? PackageState.valueOf(request.getState()).ordinal() : null)
+                            .build()
+            );
+            workspaceConfigEntities = workspaceConfigService.get(
+                    WorkspaceConfigEntity.builder()
+                            .state(WorkspaceState.ACTIVE.ordinal())
+                            .build()
+            );
+        } catch (PackageNotFoundException | WorkspaceConfigNotFoundException e) {
+        }
+
+        return RepresentationBuilder.buildStatisticPackageList(packageEntities, workspaceConfigEntities);
     }
 }

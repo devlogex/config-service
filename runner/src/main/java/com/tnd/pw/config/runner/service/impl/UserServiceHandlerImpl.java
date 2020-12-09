@@ -217,9 +217,12 @@ public class UserServiceHandlerImpl implements UserServiceHandler {
         for(UserConfigEntity userConfig: userConfigs) {
             String str = userConfig.getProductPermissions();
             str = str.substring(2);
-            boolean isMatch = Arrays.stream(str.split("\\D+"))
-                    .mapToLong(s->Long.valueOf(s))
-                    .anyMatch(id->productId.compareTo(id)==0);
+            boolean isMatch = false;
+            if(!StringUtils.isEmpty(str)) {
+                isMatch = Arrays.stream(str.split("\\D+"))
+                        .mapToLong(s -> Long.valueOf(s))
+                        .anyMatch(id -> productId.compareTo(id) == 0);
+            }
             if(isMatch) {
                 userIds.add(userConfig.getUserId());
             }

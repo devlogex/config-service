@@ -58,7 +58,7 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public List<PackageCodeEntity> getPackageCode(Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException {
-        return packageCodeDao.get(startTime, endTime);
+    public List<PackageCodeEntity> getPackageCode(Long packageId, Long startTime, Long endTime) throws DBServiceException, PackageCodeNotFoundException {
+        return packageCodeDao.get(packageId, startTime, endTime);
     }
 }

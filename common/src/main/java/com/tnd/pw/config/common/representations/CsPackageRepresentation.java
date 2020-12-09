@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -29,9 +30,9 @@ public class CsPackageRepresentation implements Serializable {
     private String code;
 
     @SerializedName("statistical_monthly")
-    private TreeMap<String, Long> statisticalMonthly;
+    private LinkedHashMap<String, StatisticalInfo> statisticalMonthly;
 
     @SerializedName("statistical_quarterly")
-    private TreeMap<String, Long> statisticalQuarterly;
+    private LinkedHashMap<String, StatisticalInfo> statisticalQuarterly;
 
 }

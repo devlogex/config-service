@@ -17,6 +17,6 @@ public interface ProductServiceHandler {
     CsProductRepresentation addProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException;
     ProductRepresentation updateProduct(ProductRequest request) throws DBServiceException, ProductNotFoundException;
     CsProductRepresentation getProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException;
-    CsProductRepresentation removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException;
+    CsProductRepresentation removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException;
     CsProductRepresentation getUserInProduct(WorkspaceRequest request) throws DBServiceException, UserConfigNotFoundException, UserProfileNotFoundException, ProductNotFoundException;
 }

@@ -36,4 +36,9 @@ public class PackageRepresentation implements Serializable {
     private String updatedAt;
     @SerializedName("updated_by")
     private String updatedBy;
+
+    @SerializedName("workspace_count")
+    private Long workspaceCount;
+    @SerializedName("statistical_info")
+    private StatisticalInfo statisticalInfo;
 }

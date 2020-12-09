@@ -55,7 +55,7 @@ public class ProductHandler implements BaseHandler {
     }
 
     @HandlerService(path = "/config/product/remove", protocol = "POST")
-    public BaseResponse<CsProductRepresentation> removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException {
+    public BaseResponse<CsProductRepresentation> removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException {
         LOGGER.info("[ProductHandler] removeProduct() - request: {}", GsonUtils.convertToString(request));
         CsProductRepresentation response = productServiceHandler.removeProduct(request);
         LOGGER.info("[ProductHandler] removeProduct() - response: {}", GsonUtils.convertToString(response));

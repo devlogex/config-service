@@ -24,6 +24,8 @@ public class WorkspaceConfigDaoImpl implements WorkspaceConfigDao {
             "SELECT * FROM workspace_config WHERE id = %d";
     private static final String SQL_SELECT_BY_WORKSPACE_ID_AND_STATE =
             "SELECT * FROM workspace_config WHERE workspace_id = %d AND state = %d";
+    private static final String SQL_SELECT_BY_STATE =
+            "SELECT * FROM workspace_config WHERE state = %d";
     private static final String SQL_SELECT =
             "SELECT * FROM workspace_config";
 
@@ -43,6 +45,9 @@ public class WorkspaceConfigDaoImpl implements WorkspaceConfigDao {
         }
         else if(entity.getWorkspaceId() != null && entity.getState() != null) {
             query = String.format(SQL_SELECT_BY_WORKSPACE_ID_AND_STATE, entity.getWorkspaceId(), entity.getState());
+        }
+        else if(entity.getState() != null) {
+            query = String.format(SQL_SELECT_BY_STATE, entity.getState());
         }
         else {
             query = String.format(SQL_SELECT);

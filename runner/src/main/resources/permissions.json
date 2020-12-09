@@ -41,7 +41,8 @@
     "permissions": [
       "/config/product",
       "/action/todo/user",
-      "/action/comment/user"
+      "/action/comment/user",
+      "^/development/idea"
     ]
   }
 ]

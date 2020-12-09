@@ -27,6 +27,9 @@ public class PackageCodeEntity implements Serializable {
     @SerializedName("state")
     private Integer state;
     @Setter
+    @SerializedName("price")
+    private BigDecimal price;
+    @Setter
     @SerializedName("created_at")
     private Long createdAt;
     @Setter

@@ -35,10 +35,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ProductServiceHandlerImpl implements ProductServiceHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceHandlerImpl.class);
+    private static ExecutorService executor = Executors.newFixedThreadPool(5);
 
     @Autowired
     private ProductService productService;
@@ -176,11 +179,49 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
 
     @Override
     public CsProductRepresentation removeProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException {
-//        ProductEntity productEntity = productService.get(ProductEntity.builder().id(request.getId()).build()).get(0);
-//        productService.remove(productEntity);
-//        List<ProductEntity> productEntities = productService.get(ProductEntity.builder().workspaceId(productEntity.getWorkspaceId()).build());
-//        return RepresentationBuilder.buildListProductRep(productEntities);
-        return null;
+        ProductEntity productEntity = productService.get(
+                ProductEntity.builder()
+                        .id(request.getId())
+                        .build()
+        ).get(0);
+
+        productService.remove(productEntity);
+        updateUserConfigAfterProductRemove(productEntity);
+        List<ProductEntity> productEntities = new ArrayList<>();
+        try {
+            productEntities = productService.get(
+                    ProductEntity.builder()
+                            .workspaceId(productEntity.getWorkspaceId())
+                            .build()
+            );
+        } catch (ProductNotFoundException e) {
+        }
+        return RepresentationBuilder.buildListProductRep(productEntities);
+    }
+
+    private void updateUserConfigAfterProductRemove(ProductEntity productEntity) {
+        executor.execute(() -> {
+            try {
+                List<UserConfigEntity> userConfigs = userService.getUserConfig(
+                        UserConfigEntity.builder()
+                                .workspaceId(productEntity.getWorkspaceId())
+                                .state(UserState.ACTIVE.ordinal())
+                                .build()
+                );
+                for(UserConfigEntity userConfigEntity: userConfigs) {
+                    HashMap<Long, String> productMapping = GsonUtils.getGson().fromJson(
+                            userConfigEntity.getProductPermissions(),
+                            new TypeToken<HashMap<Long, String>>() {}.getType()
+                    );
+                    if(productMapping.containsKey(productEntity.getId())) {
+                        productMapping.remove(productEntity.getId());
+                        userConfigEntity.setProductPermissions(GsonUtils.convertToString(productMapping));
+                        userService.updateUserConfig(userConfigEntity);
+                    }
+                }
+            } catch (DBServiceException | UserConfigNotFoundException e) {
+            }
+        });
     }
 
     @Override

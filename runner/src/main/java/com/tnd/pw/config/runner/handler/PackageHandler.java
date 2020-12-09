@@ -17,9 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-
 @HandlerServiceClass
 public class PackageHandler implements BaseHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(PackageHandler.class);
@@ -59,11 +56,19 @@ public class PackageHandler implements BaseHandler {
         return new BaseResponse<>(response);
     }
 
-    @HandlerService(path = "/config/package/statistical", protocol = "GET")
-    public BaseResponse<CsPackageRepresentation> statisticalPackage(AdminRequest request) throws DBServiceException, PackageNotFoundException {
-        LOGGER.info("[PackageHandler] statisticalPackage() - request: {}", GsonUtils.convertToString(request));
-        CsPackageRepresentation response = packageServiceHandler.statisticalPackage(request);
-        LOGGER.info("[PackageHandler] statisticalPackage() - response: {}", GsonUtils.convertToString(response));
+    @HandlerService(path = "/config/package/statistic_detail", protocol = "GET")
+    public BaseResponse<CsPackageRepresentation> statisticPackageDetail(AdminRequest request) throws DBServiceException, PackageNotFoundException {
+        LOGGER.info("[PackageHandler] statisticPackageDetail() - request: {}", GsonUtils.convertToString(request));
+        CsPackageRepresentation response = packageServiceHandler.statisticPackageDetail(request);
+        LOGGER.info("[PackageHandler] statisticPackageDetail() - response: {}", GsonUtils.convertToString(response));
+        return new BaseResponse<>(response);
+    }
+
+    @HandlerService(path = "/config/package/statistic_list", protocol = "GET")
+    public BaseResponse<CsPackageRepresentation> statisticPackageList(AdminRequest request) throws DBServiceException, PackageNotFoundException {
+        LOGGER.info("[PackageHandler] statisticPackageList() - request: {}", GsonUtils.convertToString(request));
+        CsPackageRepresentation response = packageServiceHandler.statisticPackageList(request);
+        LOGGER.info("[PackageHandler] statisticPackageList() - response: {}", GsonUtils.convertToString(response));
         return new BaseResponse<>(response);
     }
 }

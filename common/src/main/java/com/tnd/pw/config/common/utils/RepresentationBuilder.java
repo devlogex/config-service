@@ -1,6 +1,5 @@
 package com.tnd.pw.config.common.utils;
 
-import com.tnd.common.api.common.base.authens.UserPermission;
 import com.tnd.pw.config.common.representations.*;
 import com.tnd.pw.config.packages.entity.PackageCodeEntity;
 import com.tnd.pw.config.packages.enums.PackageState;
@@ -12,7 +11,10 @@ import com.tnd.pw.config.workspace.config.entity.WorkspaceConfigEntity;
 import com.tnd.pw.config.workspace.entity.WorkspaceEntity;
 import com.tnd.pw.config.workspace.enums.WorkspaceState;
 
+import java.math.BigDecimal;
+import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RepresentationBuilder {
 
@@ -212,19 +214,27 @@ public class RepresentationBuilder {
     }
 
     public static CsPackageRepresentation buildStatisticalMonthly(List<PackageCodeEntity> packageCodeEntities, Long startTime, Long endTime) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(startTime);
-        TreeMap<String, Long> map = new TreeMap<>();
-        while(cal.getTimeInMillis() <= endTime) {
-            long start = cal.getTimeInMillis();
-            cal.add(Calendar.MONTH, 1);
-            cal.add(Calendar.DATE, -1);
-            long end = cal.getTimeInMillis();
+        LocalDateTime localDateTime = Instant.ofEpochMilli(startTime)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        LinkedHashMap<String, StatisticalInfo> map = new LinkedHashMap<>();
+        while(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() <= endTime) {
+            long start = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            localDateTime = localDateTime.plusMonths(1);
+            localDateTime = localDateTime.plusDays(-1);
+            long end = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            List<PackageCodeEntity> packagesInMonth = packageCodeEntities.stream().filter(packageCode -> packageCode.getCreatedAt() >= start && packageCode.getCreatedAt() <= end).collect(Collectors.toList());
+            long countSale = packagesInMonth.size();
+            BigDecimal moneyIn = packagesInMonth.stream().map(packageCode -> packageCode.getPrice()).reduce(BigDecimal.ZERO, (cur, sum) -> cur.add(sum));
 
-            long count = packageCodeEntities.stream().filter(packageCode -> packageCode.getCreatedAt() >= start && packageCode.getCreatedAt() <= end).count();
-            map.put(String.format("%d/%d", cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)), count);
+            StatisticalInfo statisticalInfo = new StatisticalInfo();
+            statisticalInfo.setMonth(localDateTime.getMonth().getValue());
+            statisticalInfo.setYear(localDateTime.getYear());
+            statisticalInfo.setCountSale(countSale);
+            statisticalInfo.setMoneyIn(moneyIn);
+            map.put(String.format("%02d-%d", localDateTime.getMonth().getValue(), localDateTime.getYear()), statisticalInfo);
 
-            cal.add(Calendar.DATE, 1);
+            localDateTime = localDateTime.plusDays(1);
         }
         CsPackageRepresentation representation = new CsPackageRepresentation();
         representation.setStatisticalMonthly(map);
@@ -233,5 +243,20 @@ public class RepresentationBuilder {
 
     public static CsPackageRepresentation buildStatisticalQuarterly(List<PackageCodeEntity> packageCodeEntities, Long startTime, Long endTime) {
         return null;
+    }
+
+    public static CsPackageRepresentation buildStatisticPackageList(List<PackageEntity> packageEntities, List<WorkspaceConfigEntity> workspaceConfigEntities) {
+        List<PackageRepresentation> packageReps = new ArrayList<>();
+        for(PackageEntity packageEntity: packageEntities) {
+            PackageRepresentation packageRep = buildPackageRepresentation(packageEntity);
+            long count = workspaceConfigEntities.stream()
+                    .filter(config -> config.getPackageId().compareTo(packageEntity.getId()) == 0)
+                    .count();
+            packageRep.setWorkspaceCount(count);
+            packageReps.add(packageRep);
+        }
+        CsPackageRepresentation representation = new CsPackageRepresentation();
+        representation.setPackageReps(packageReps);
+        return representation;
     }
 }

@@ -86,7 +86,10 @@
             <artifactId>cache</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.tnd.pw.development</groupId>
+            <artifactId>sdk</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

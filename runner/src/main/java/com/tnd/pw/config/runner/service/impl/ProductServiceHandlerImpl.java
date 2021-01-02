@@ -17,6 +17,7 @@ import com.tnd.pw.config.product.entity.ProductEntity;
 import com.tnd.pw.config.product.enums.ProductType;
 import com.tnd.pw.config.product.exception.ProductNotFoundException;
 import com.tnd.pw.config.product.service.ProductService;
+import com.tnd.pw.config.runner.config.RunnerConfig;
 import com.tnd.pw.config.runner.service.ProductServiceHandler;
 import com.tnd.pw.config.user.constants.UserPermissions;
 import com.tnd.pw.config.user.constants.UserState;
@@ -27,6 +28,7 @@ import com.tnd.pw.config.user.exception.UserConfigNotFoundException;
 import com.tnd.pw.config.user.exception.UserProfileNotFoundException;
 import com.tnd.pw.config.user.service.UserService;
 import com.tnd.pw.config.workspace.exception.WorkspaceNotFoundException;
+import com.tnd.pw.development.sdk.DevServiceSdkClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,8 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
     private UserService userService;
     @Autowired
     private CacheHelper cacheHelper;
+    @Autowired
+    private DevServiceSdkClient devServiceSdkClient;
 
     @Override
     public CsProductRepresentation addProduct(WorkspaceRequest request) throws DBServiceException, ProductNotFoundException, UserConfigNotFoundException, PermissionNotFoundException, WorkspaceNotFoundException, UserProfileNotFoundException {
@@ -103,6 +107,8 @@ public class ProductServiceHandlerImpl implements ProductServiceHandler {
                         userConfigEntity.getWorkspaceId(),
                         workspacePermission
                 ));
+
+        RunnerConfig.executor.execute(() -> devServiceSdkClient.generateParkingLot(productEntity.getId()));
 
         return RepresentationBuilder.buildListProductRep(productEntities, token, productMapping);
     }

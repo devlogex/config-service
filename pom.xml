@@ -29,6 +29,7 @@
         <common.ioc.version>1.0-SNAPSHOT</common.ioc.version>
         <common.notification.version>1.0-SNAPSHOT</common.notification.version>
         <dbservice.version>1.0-SNAPSHOT</dbservice.version>
+        <dev.version>1.0-SNAPSHOT</dev.version>
         <lombok.version>1.18.12</lombok.version>
         <mail.version>1.6.2</mail.version>
         <config.version>1.0-SNAPSHOT</config.version>
@@ -121,6 +122,11 @@
                 <groupId>com.tnd.pw.config</groupId>
                 <artifactId>common</artifactId>
                 <version>${config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tnd.pw.development</groupId>
+                <artifactId>sdk</artifactId>
+                <version>${dev.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

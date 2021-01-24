@@ -91,7 +91,7 @@ public class RunnerConfig {
 
     @Bean
     public NotificationService notificationService() {
-        return new EmailService(sendAddress, auth);
+        return new EmailService(sendAddress);
     }
 
     @Bean

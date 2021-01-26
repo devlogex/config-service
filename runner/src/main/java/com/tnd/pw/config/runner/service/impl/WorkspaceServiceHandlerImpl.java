@@ -189,7 +189,6 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             UserProfileEntity userProfileEntity = userService.getUserProfile(
                     UserProfileEntity.builder()
                             .email(request.getEmail())
-                            .password(DEFAULT_PASSWORD)
                             .build()
             ).get(0);
             try {
@@ -257,6 +256,7 @@ public class WorkspaceServiceHandlerImpl implements WorkspaceServiceHandler {
             UserProfileEntity userProfileEntity = userService.createUserProfile(
                     UserProfileEntity.builder()
                             .email(request.getEmail())
+                            .password(DEFAULT_PASSWORD)
                             .firstName(request.getFirstName())
                             .lastName(request.getLastName())
                             .role(AccountType.USER)
